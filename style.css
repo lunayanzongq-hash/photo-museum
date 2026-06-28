@@ -18,3 +18,10 @@ body { display: flex; background: #111; color: #eee; font-family: sans-serif; he
 #close { position: absolute; top: 16px; right: 24px; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; }
 #prev, #next { position: absolute; top: 50%; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 2.5rem; cursor: pointer; padding: 10px 18px; border-radius: 6px; transform: translateY(-50%); }
 #prev { left: 16px; } #next { right: 16px; }
+@media (max-width: 768px) {
+  body { flex-direction: column; }
+  #sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; align-items: center; flex-wrap: wrap; padding: 16px; gap: 12px; }
+  #nav { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  #gallery { padding: 12px; gap: 8px; }
+  #content { margin-left: 0; padding: 20px; max-width: 100%; }
+}

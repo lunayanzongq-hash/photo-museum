@@ -24,6 +24,11 @@
     #article h2 { font-size: 1.4rem; margin-bottom: 8px; }
     #article .date { color: #555; font-size: 0.8rem; margin-bottom: 28px; }
     #article .body { color: #ccc; font-size: 0.95rem; line-height: 2; white-space: pre-wrap; }
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      #sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; align-items: center; padding: 16px; gap: 12px; }
+      #content { margin-left: 0; padding: 20px; max-width: 100%; }
+    }
   </style>
 </head>
 <body>
