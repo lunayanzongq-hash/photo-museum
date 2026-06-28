@@ -6,47 +6,54 @@
   <title>文字</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { display: flex; background-color: #f5f0e8; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); color: #222; font-family: sans-serif; min-height: 100vh; font-family: sans-serif; min-height: 100vh; }
-#sidebar { width: 200px; min-width: 200px; background: #f5f5f5; padding: 24px 16px; display: flex; flex-direction: column; gap: 16px; position: fixed; height: 100vh; }
-#sidebar h1 { font-size: 1rem; color: #888; letter-spacing: 0.1em; }
-#sidebar a.back { color: #999; text-decoration: none; font-size: 0.85rem; }
-    #sidebar a.back:hover { color: #aaa; }
-    #content { margin-left: 200px; flex: 1; padding: 40px; max-width: 720px; }
+    body { display: flex; flex-direction: column; background: #f5f0e8; color: #222; font-family: sans-serif; min-height: 100vh; }
+    #banner { width: 100%; height: 260px; overflow: hidden; }
+    #banner img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    #main-wrap { display: flex; flex: 1; }
+    #sidebar { width: 200px; min-width: 200px; background: #ede8dc; padding: 24px 16px; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 0; height: 100vh; }
+    #sidebar h1 { font-size: 1rem; color: #888; letter-spacing: 0.1em; }
+    #sidebar a.back { color: #999; text-decoration: none; font-size: 0.85rem; }
+    #sidebar a.back:hover { color: #666; }
+    #content { flex: 1; padding: 40px; max-width: 720px; }
     #list { display: flex; flex-direction: column; gap: 28px; }
-    .item { border-bottom: 1px solid #222; padding-bottom: 24px; cursor: pointer; }
-    .item:hover h2 { color: #fff; }
-    .item .date { color: #555; font-size: 0.8rem; margin-bottom: 6px; }
-    .item h2 { font-size: 1.05rem; margin-bottom: 8px; color: #ddd; transition: color .2s; }
+    .item { border-bottom: 1px solid #ddd; padding-bottom: 24px; cursor: pointer; }
+    .item:hover h2 { color: #000; }
+    .item .date { color: #999; font-size: 0.8rem; margin-bottom: 6px; }
+    .item h2 { font-size: 1.05rem; margin-bottom: 8px; color: #333; transition: color .2s; }
     .item .summary { color: #777; font-size: 0.9rem; line-height: 1.6; }
     #article { display: none; }
-    #article .back-btn { color: #666; font-size: 0.85rem; cursor: pointer; margin-bottom: 28px; display: inline-block; }
-    #article .back-btn:hover { color: #aaa; }
-    #article h2 { font-size: 1.4rem; margin-bottom: 8px; }
-    #article .date { color: #555; font-size: 0.8rem; margin-bottom: 28px; }
-    #article .body { color: #333; font-size: 0.95rem; line-height: 2; white-space: pre-wrap; }
-    .item h2 { font-size: 1.05rem; margin-bottom: 8px; color: #222; transition: color .2s; }
-    .item .summary { color: #666; font-size: 0.9rem; line-height: 1.6; }
-    .item { border-bottom: 1px solid #eee; padding-bottom: 24px; cursor: pointer; }
-      body { flex-direction: column; }
+    #article .back-btn { color: #999; font-size: 0.85rem; cursor: pointer; margin-bottom: 28px; display: inline-block; }
+    #article .back-btn:hover { color: #555; }
+    #article h2 { font-size: 1.4rem; margin-bottom: 8px; color: #222; }
+    #article .date { color: #999; font-size: 0.8rem; margin-bottom: 28px; }
+    #article .body { color: #444; font-size: 0.95rem; line-height: 2; white-space: pre-wrap; }
+    @media (max-width: 768px) {
+      #banner { height: 180px; }
+      #main-wrap { flex-direction: column; }
       #sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; align-items: center; padding: 16px; gap: 12px; }
-      #content { margin-left: 0; padding: 20px; max-width: 100%; }
-    
+      #content { padding: 20px; max-width: 100%; }
+    }
   </style>
 </head>
 <body>
-  <aside id="sidebar">
-    <h1>✍️ 文字</h1>
-    <a class="back" href="index.html">← 返回</a>
-  </aside>
-  <main id="content">
-    <div id="list"></div>
-    <div id="article">
-      <span class="back-btn" onclick="showList()">← 返回列表</span>
-      <h2 id="art-title"></h2>
-      <div class="date" id="art-date"></div>
-      <div class="body" id="art-body"></div>
-    </div>
-  </main>
+  <div id="banner">
+    <img src="photos/bg.jpg" alt="banner" />
+  </div>
+  <div id="main-wrap">
+    <aside id="sidebar">
+      <h1>✍️ 文字</h1>
+      <a class="back" href="index.html">← 返回</a>
+    </aside>
+    <main id="content">
+      <div id="list"></div>
+      <div id="article">
+        <span class="back-btn" onclick="showList()">← 返回列表</span>
+        <h2 id="art-title"></h2>
+        <div class="date" id="art-date"></div>
+        <div class="body" id="art-body"></div>
+      </div>
+    </main>
+  </div>
   <script src="articles.js"></script>
   <script>
     const list = document.getElementById("list");
