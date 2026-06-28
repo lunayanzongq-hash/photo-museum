@@ -50,10 +50,19 @@ function openPhoto(i, list) {
   lbDesc.textContent = filtered[i].desc || "";
   lightbox.classList.remove("hidden");
 }
-
+lbImg.style.transform = "scale(1)";
+lbImg.dataset.scale = "1";
 document.getElementById("close").onclick = () => lightbox.classList.add("hidden");
 document.getElementById("prev").onclick = () => openPhoto((current - 1 + filtered.length) % filtered.length, filtered);
 document.getElementById("next").onclick = () => openPhoto((current + 1) % filtered.length, filtered);
 
 renderNav();
+lightbox.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  let scale = parseFloat(lbImg.dataset.scale) || 1;
+  scale += e.deltaY < 0 ? 0.1 : -0.1;
+  scale = Math.min(Math.max(scale, 0.5), 4);
+  lbImg.dataset.scale = scale;
+  lbImg.style.transform = "scale(" + scale + ")";
+}, { passive: false });
 render(photos);
