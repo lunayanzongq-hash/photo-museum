@@ -7,16 +7,17 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
+  <aside id="sidebar">
     <h1>📷 Photo Museum</h1>
-    <input type="text" id="search" placeholder="搜索照片..." />
-  </header>
+    <nav id="nav"></nav>
+  </aside>
   <main id="gallery"></main>
   <div id="lightbox" class="hidden">
     <button id="close">✕</button>
     <button id="prev">‹</button>
     <img id="lightbox-img" src="" alt="" />
     <p id="lightbox-caption"></p>
+    <p id="lightbox-desc"></p>
     <button id="next">›</button>
   </div>
   <script src="script.js"></script>

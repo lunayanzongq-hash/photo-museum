@@ -1,14 +1,35 @@
 ﻿const photos = [
-  { src: "photos/1.jpg", caption: "照片一" },
-  { src: "photos/2.jpg", caption: "照片二" },
-  { src: "photos/3.jpg", caption: "照片三" },
+  { src: "photos/1.jpg", caption: "2020年5月", category: "动物", desc: "封城时买的第一个相机，在镜头下第一次仔细看到了鸡的羽毛和色彩也很漂亮。" },
+  { src: "photos/2.jpg", caption: "2022年9月", category: "风景", desc: "杭州萧山湘湖，环卫工人和景色融为一体。" },
+  { src: "photos/3.jpg", caption: "2022年10月", category: "人物", desc: "那时训练完最大的奢侈仅仅是去吃十块一份的过桥米线。" },
 ];
+
+const categories = ["全部", ...new Set(photos.map(p => p.category))];
+let current = 0;
+let filtered = [...photos];
 
 const gallery = document.getElementById("gallery");
 const lightbox = document.getElementById("lightbox");
 const lbImg = document.getElementById("lightbox-img");
 const lbCaption = document.getElementById("lightbox-caption");
-let current = 0;
+const lbDesc = document.getElementById("lightbox-desc");
+const nav = document.getElementById("nav");
+
+function renderNav() {
+  nav.innerHTML = "";
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.textContent = cat;
+    btn.onclick = () => {
+      document.querySelectorAll("#nav button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filtered = cat === "全部" ? [...photos] : photos.filter(p => p.category === cat);
+      render(filtered);
+    };
+    nav.appendChild(btn);
+  });
+  nav.firstChild.classList.add("active");
+}
 
 function render(list) {
   gallery.innerHTML = "";
@@ -16,21 +37,23 @@ function render(list) {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = "<img src='" + p.src + "' alt='" + p.caption + "'><div class='label'>" + p.caption + "</div>";
-    card.onclick = () => openPhoto(i);
+    card.onclick = () => openPhoto(i, list);
     gallery.appendChild(card);
   });
 }
 
-function openPhoto(i) {
+function openPhoto(i, list) {
   current = i;
-  lbImg.src = photos[i].src;
-  lbCaption.textContent = photos[i].caption;
+  filtered = list;
+  lbImg.src = filtered[i].src;
+  lbCaption.textContent = filtered[i].caption;
+  lbDesc.textContent = filtered[i].desc || "";
   lightbox.classList.remove("hidden");
 }
 
 document.getElementById("close").onclick = () => lightbox.classList.add("hidden");
-document.getElementById("prev").onclick = () => openPhoto((current - 1 + photos.length) % photos.length);
-document.getElementById("next").onclick = () => openPhoto((current + 1) % photos.length);
-document.getElementById("search").oninput = e => render(photos.filter(p => p.caption.includes(e.target.value)));
+document.getElementById("prev").onclick = () => openPhoto((current - 1 + filtered.length) % filtered.length, filtered);
+document.getElementById("next").onclick = () => openPhoto((current + 1) % filtered.length, filtered);
 
+renderNav();
 render(photos);
