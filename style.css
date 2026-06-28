@@ -22,6 +22,6 @@ body { display: flex; background: #111; color: #eee; font-family: sans-serif; he
   body { flex-direction: column; }
   #sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; align-items: center; flex-wrap: wrap; padding: 16px; gap: 12px; }
   #nav { flex-direction: row; flex-wrap: wrap; gap: 6px; }
-  #gallery { padding: 12px; gap: 16px; }
+  #gallery { padding: 12px; gap: 12px; grid-template-columns: 1fr; }
   #content { margin-left: 0; padding: 20px; max-width: 100%; }
 }
