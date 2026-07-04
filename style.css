@@ -25,4 +25,8 @@ body { display: flex; background: #111; color: #eee; font-family: sans-serif; he
   #gallery { padding: 12px; gap: 12px; grid-template-columns: 1fr; }
   .card { aspect-ratio: 4/3; }
   #content { margin-left: 0; padding: 20px; max-width: 100%; }
+}#top-banner{
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
 }

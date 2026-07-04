@@ -6,40 +6,54 @@
   <title>文字</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { display: flex; flex-direction: column; background-image: url('photos/bg.jpg'); background-size: cover; background-position: center; background-attachment: fixed; color: #222; font-family: sans-serif; min-height: 100vh; }
+    body { display: flex; flex-direction: column; background: #f2ebe0; color: #222; font-family: sans-serif; min-height: 100vh; }
     #main-wrap { display: flex; flex: 1; }
-    #sidebar { width: 48px; min-width: 48px; background: rgba(237, 232, 220, 0.5); padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; height: 100vh; overflow: hidden; transition: width .3s ease; }
+    #sidebar { width: 48px; min-width: 48px; background: #e8dfd0; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; height: 100vh; overflow: hidden; transition: width .3s ease; border-right: 1px solid #d9cfc0; }
     #sidebar.open { width: 220px; align-items: flex-start; padding: 24px 16px; overflow-y: auto; }
-    #toggle-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #555; flex-shrink: 0; }
-    #toggle-btn:hover { color: #222; }
-    #back-btn { font-size: 0.75rem; color: #666; text-decoration: none; writing-mode: vertical-rl; text-orientation: mixed; }
-    #back-btn:hover { color: #333; }
-    #sidebar-inner { display: none; flex-direction: column; gap: 12px; width: 100%; }
+    #toggle-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #888; flex-shrink: 0; }
+    #toggle-btn:hover { color: #444; }
+    #back-btn { font-size: 0.75rem; color: #999; text-decoration: none; writing-mode: vertical-rl; text-orientation: mixed; }
+    #back-btn:hover { color: #555; }
+    .font-btns { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+    .font-btn { background: none; border: 1px solid #c9bfb0; color: #888; cursor: pointer; border-radius: 4px; width: 28px; height: 24px; font-size: 0.75rem; line-height: 1; }
+    .font-btn:hover { background: #ddd5c5; color: #444; }
+    #sidebar-inner { display: none; flex-direction: column; gap: 16px; width: 100%; }
     #sidebar.open #sidebar-inner { display: flex; }
-    #sidebar h1 { font-size: 0.95rem; color: #666; letter-spacing: 0.1em; }
-    #article-nav { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
-    .nav-item { font-size: 0.85rem; color: #666; cursor: pointer; padding: 6px 8px; border-radius: 4px; line-height: 1.4; }
-    .nav-item:hover { background: rgba(200, 195, 185, 0.5); color: #222; }
-    .nav-item.active { background: rgba(200, 195, 185, 0.5); color: #222; }
-    #content { flex: 1; padding: 40px; max-width: 720px; background: rgba(245, 240, 232, 0.35); margin: 20px; border-radius: 12px; }
+    #sidebar h1 { font-size: 0.95rem; color: #999; letter-spacing: 0.1em; }
+    .font-size-row { display: flex; align-items: center; gap: 8px; }
+    .font-size-row span { font-size: 0.8rem; color: #999; }
+    .font-size-row button { background: none; border: 1px solid #c9bfb0; color: #888; cursor: pointer; border-radius: 4px; width: 28px; height: 24px; font-size: 0.8rem; }
+    .font-size-row button:hover { background: #ddd5c5; color: #444; }
+    #font-size-display { font-size: 0.8rem; color: #888; min-width: 30px; text-align: center; }
+    #article-nav { display: flex; flex-direction: column; gap: 8px; }
+    .nav-item { font-size: 0.85rem; color: #888; cursor: pointer; padding: 6px 8px; border-radius: 4px; line-height: 1.4; }
+    .nav-item:hover { background: #ddd5c5; color: #333; }
+    .nav-item.active { background: #ddd5c5; color: #333; }
+    #content { flex: 1; padding: 48px; background: #fffdf8; margin: 24px; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
     #list { display: flex; flex-direction: column; gap: 28px; }
-    .item { border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 24px; cursor: pointer; }
+    .item { border-bottom: 1px solid #e8e0d0; padding-bottom: 24px; cursor: pointer; }
     .item:hover h2 { color: #000; }
-    .item .date { color: #777; font-size: 0.8rem; margin-bottom: 6px; }
-    .item h2 { font-size: 1.05rem; margin-bottom: 8px; color: #222; transition: color .2s; }
-    .item .summary { color: #555; font-size: 0.9rem; line-height: 1.6; }
+    .item .date { color: #aaa; margin-bottom: 6px; }
+    .item h2 { margin-bottom: 8px; color: #333; transition: color .2s; }
+    .item .summary { color: #888; line-height: 1.7; }
     #article { display: none; }
-    #article .back-btn { color: #777; font-size: 0.85rem; cursor: pointer; margin-bottom: 28px; display: inline-block; }
-    #article .back-btn:hover { color: #333; }
-    #article h2 { font-size: 1.4rem; margin-bottom: 8px; color: #111; }
-    #article .date { color: #777; font-size: 0.8rem; margin-bottom: 28px; }
-    #article .body { color: #333; font-size: 0.95rem; line-height: 2; white-space: pre-wrap; }
+    #article .back-btn { color: #aaa; cursor: pointer; margin-bottom: 32px; display: inline-block; }
+    #article .back-btn:hover { color: #555; }
+    #article-header { text-align: center; margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid #e8e0d0; }
+    #article h2 { font-size: 1.6rem; color: #111; font-weight: 600; margin-bottom: 12px; }
+    #article .date { color: #aaa; }
+    #article .body { color: #333; line-height: 2; white-space: pre-wrap; }
+    #back-top { position: fixed; bottom: 36px; right: 36px; width: 42px; height: 42px; background: #e8dfd0; border: 1px solid #d9cfc0; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; color: #888; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: background .2s, color .2s; z-index: 99; }
+    #back-top:hover { background: #ddd5c5; color: #444; }
+    #back-top.visible { display: flex; }
     @media (max-width: 768px) {
       #main-wrap { flex-direction: column; }
       #sidebar { width: 100%; min-width: unset; height: auto; position: relative; flex-direction: row; align-items: center; flex-wrap: wrap; padding: 12px 16px; }
       #sidebar.open { width: 100%; }
       #back-btn { writing-mode: horizontal-tb; }
-      #content { padding: 20px; max-width: 100%; margin: 10px; }
+      .font-btns { flex-direction: row; }
+      #content { padding: 20px; margin: 10px; }
+      #back-top { bottom: 20px; right: 20px; }
     }
   </style>
 </head>
@@ -48,8 +62,18 @@
     <aside id="sidebar">
       <button id="toggle-btn" onclick="toggleSidebar()">☰</button>
       <a id="back-btn" href="index.html">← 返回</a>
+      <div class="font-btns">
+        <button class="font-btn" onclick="changeFontSize(1)">A+</button>
+        <button class="font-btn" onclick="changeFontSize(-1)">A-</button>
+      </div>
       <div id="sidebar-inner">
         <h1>✍️ 文字</h1>
+        <div class="font-size-row">
+          <span>字号</span>
+          <button onclick="changeFontSize(-1)">−</button>
+          <span id="font-size-display">15</span>
+          <button onclick="changeFontSize(1)">+</button>
+        </div>
         <nav id="article-nav"></nav>
       </div>
     </aside>
@@ -57,21 +81,42 @@
       <div id="list"></div>
       <div id="article">
         <span class="back-btn" onclick="showList()">← 返回列表</span>
-        <h2 id="art-title"></h2>
-        <div class="date" id="art-date"></div>
+        <div id="article-header">
+          <h2 id="art-title"></h2>
+          <div class="date" id="art-date"></div>
+        </div>
         <div class="body" id="art-body"></div>
       </div>
     </main>
   </div>
+  <div id="back-top" onclick="scrollToTop()">↑</div>
   <script src="articles.js"></script>
   <script>
     const list = document.getElementById("list");
     const articleView = document.getElementById("article");
     const articleNav = document.getElementById("article-nav");
     const sidebar = document.getElementById("sidebar");
+    const artBody = document.getElementById("art-body");
+    const content = document.getElementById("content");
+    const backTop = document.getElementById("back-top");
+    let fontSize = 15;
+
+    window.addEventListener("scroll", () => {
+      backTop.classList.toggle("visible", window.scrollY > 300);
+    });
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
     function toggleSidebar() {
       sidebar.classList.toggle("open");
+    }
+
+    function changeFontSize(delta) {
+      fontSize = Math.min(Math.max(fontSize + delta, 12), 24);
+      content.style.fontSize = fontSize + "px";
+      document.getElementById("font-size-display").textContent = fontSize;
     }
 
     function showList() {
@@ -85,7 +130,8 @@
       articleView.style.display = "block";
       document.getElementById("art-title").textContent = articles[i].title;
       document.getElementById("art-date").textContent = articles[i].date;
-      document.getElementById("art-body").textContent = articles[i].content;
+      artBody.textContent = articles[i].content;
+      window.scrollTo({ top: 0, behavior: "smooth" });
       document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
       articleNav.children[i].classList.add("active");
     }
