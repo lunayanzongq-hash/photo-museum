@@ -8,7 +8,7 @@
 </head>
 <body>
   <div id="top-bar">
-    <button id="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <button id="toggle-btn" onclick="toggleSidebar(event)">☰</button>
     <span id="brand-name">YAN的影像博物馆</span>
   </div>
   <div id="main-wrap">
@@ -30,10 +30,19 @@
   <script>
     const sidebar = document.getElementById("sidebar");
     const brandName = document.getElementById("brand-name");
-    function toggleSidebar() {
+
+    function toggleSidebar(e) {
+      if (e) e.stopPropagation();
       sidebar.classList.toggle("open");
-      brandName.textContent = sidebar.classList.contains("open") ? "分类浏览" : "YAN的影像博物馆";
+      brandName.textContent = sidebar.classList.contains("open") ? "分类目录" : "📷 YAN的影像博物馆";
     }
+
+    document.addEventListener("click", (e) => {
+      if (sidebar.classList.contains("open") && !sidebar.contains(e.target)) {
+        sidebar.classList.remove("open");
+        brandName.textContent = " YAN的影像博物馆";
+      }
+    });
   </script>
 </body>
 </html>
