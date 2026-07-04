@@ -18,12 +18,14 @@
       background-color: #f5ecd4;
     }
 
+    .font-btns { display: none; gap: 6px; margin-left: auto; }
+    body.reading .font-btns { display: flex; }
+
     #top-bar { position: sticky; top: 0; z-index: 150; display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: rgba(20,20,20,0.7); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.6s ease; }
     body.reading #top-bar { background: rgba(160,140,90,0.5); }
     #toggle-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #e0dcd4; flex-shrink: 0; }
     #toggle-btn:hover { color: #c9773f; }
     #brand-name { font-size: 0.95rem; color: #e0dcd4; letter-spacing: 0.08em; white-space: nowrap; }
-    .font-btns { display: flex; gap: 6px; margin-left: auto; }
     .font-btn { background: none; border: 1px solid rgba(255,255,255,0.2); color: #e0dcd4; cursor: pointer; border-radius: 4px; width: 28px; height: 24px; font-size: 0.75rem; line-height: 1; }
     .font-btn:hover { background: rgba(201,119,63,0.2); color: #c9773f; }
 
@@ -63,7 +65,7 @@
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
-    #list { display: flex; flex-direction: column; gap: 28px; }
+    #list { display: flex; flex-direction: column; gap: 28px; font-size: 15px; }
     .item { border-bottom: 1px solid #e8e0d0; padding-bottom: 24px; cursor: pointer; }
     .item:hover h2 { color: #000; }
     .item .date { color: #aaa; margin-bottom: 6px; }
@@ -93,7 +95,6 @@
   <div id="top-bar">
     <button id="toggle-btn" onclick="toggleSidebar()">☰</button>
     <span id="brand-name">YAN的文字博物馆</span>
-
     <div class="font-btns">
       <button class="font-btn" onclick="changeFontSize(1)">A+</button>
       <button class="font-btn" onclick="changeFontSize(-1)">A-</button>
@@ -127,7 +128,8 @@
     const content = document.getElementById("content");
     const backTop = document.getElementById("back-top");
     const brandName = document.getElementById("brand-name");
-    let fontSize = 20;
+    let fontSize = 18;
+    content.style.fontSize = fontSize + "px";
 
     window.addEventListener("scroll", () => {
       backTop.classList.toggle("visible", window.scrollY > 300);
