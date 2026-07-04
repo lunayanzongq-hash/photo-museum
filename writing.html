@@ -141,9 +141,16 @@
     }
 
     function toggleSidebar() {
-      sidebar.classList.toggle("open");
-      brandName.textContent = sidebar.classList.contains("open") ? "文章目录" : "文字";
-    }
+  sidebar.classList.toggle("open");
+  brandName.textContent = sidebar.classList.contains("open") ? "文章目录" : "文字";
+}
+
+document.addEventListener("click", (e) => {
+  if (sidebar.classList.contains("open") && !sidebar.contains(e.target) && !e.target.closest("#toggle-btn")) {
+    sidebar.classList.remove("open");
+    brandName.textContent = "文字";
+  }
+});
 
     function changeFontSize(delta) {
       fontSize = Math.min(Math.max(fontSize + delta, 12), 24);
