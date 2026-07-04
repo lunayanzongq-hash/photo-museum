@@ -7,12 +7,17 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <aside id="sidebar">
-    <h1>📷 Photo Museum</h1>
-   <a style="color:#666;text-decoration:none;font-size:0.85rem;" href="index.html">← 返回</a>
-    <nav id="nav"></nav>
-  </aside><a style="color:#666;text-decoration:none;font-size:0.85rem;" href="index.html?v=2">← 返回</a>
-  <main id="gallery"></main>
+  <div id="top-bar">
+    <button id="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <span id="brand-name">YAN的影像博物馆</span>
+  </div>
+  <div id="main-wrap">
+    <aside id="sidebar">
+      <a id="back-btn" href="index.html">← 返回主页</a>
+      <nav id="nav"></nav>
+    </aside>
+    <main id="gallery"></main>
+  </div>
   <div id="lightbox" class="hidden">
     <button id="close">✕</button>
     <button id="prev">‹</button>
@@ -22,5 +27,13 @@
     <button id="next">›</button>
   </div>
   <script src="script.js"></script>
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const brandName = document.getElementById("brand-name");
+    function toggleSidebar() {
+      sidebar.classList.toggle("open");
+      brandName.textContent = sidebar.classList.contains("open") ? "分类浏览" : "YAN的影像博物馆";
+    }
+  </script>
 </body>
 </html>
