@@ -5,14 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Luna</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #111; color: #eee; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
-    h1 { font-size: 1.2rem; color: #888; margin-bottom: 24px; letter-spacing: 0.2em; }
-    .cards { display: flex; gap: 24px; }
-    .card { width: 200px; height: 260px; background: #1a1a1a; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; cursor: pointer; text-decoration: none; color: #eee; transition: background .2s, transform .2s; }
-    .card:hover { background: #252525; transform: translateY(-4px); }
-    .card .icon { font-size: 3rem; }
-    .card .label { font-size: 1rem; color: #aaa; }
+   body { 
+  background-image: url('photos/bg.jpg'); 
+  background-size: cover; 
+  background-position: center; 
+  background-attachment: fixed;
+  color: #eee; 
+  font-family: sans-serif; 
+  height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 16px; 
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 0;
+}
+
+h1, .cards {
+  position: relative;
+  z-index: 1;
+}
   </style>
 </head>
 <body>
