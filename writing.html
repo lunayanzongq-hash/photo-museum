@@ -84,11 +84,12 @@
     #back-top.visible { display: flex; }
 
     @media (max-width: 768px) {
-      #sidebar { position: fixed; top: 53px; left: 0; height: calc(100vh - 53px); }
-      #sidebar.open { width: 100%; min-width: unset; }
-      #content { padding: 20px; margin: 10px auto; }
-      #back-top { bottom: 20px; right: 20px; }
-    }
+  #sidebar { position: fixed; top: 53px; left: 0; height: calc(100vh - 53px); z-index: 140; }
+  #sidebar.open { width: 100%; min-width: unset; }
+  #content { padding: 20px; margin: 10px auto; }
+  #back-top { bottom: 20px; right: 20px; }
+  #main-wrap { position: relative; }
+}
   </style>
 </head>
 <body>
