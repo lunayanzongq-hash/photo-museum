@@ -4,7 +4,7 @@
   { src: "photos/3.jpg", caption: "2022年10月，自己，", category: "人物", desc: "那时训练完最大的奢侈仅仅是去吃十块一份的过桥米线。" },
   { src: "photos/4.jpg", caption: "2025年12月23日晚，房门口", category: "光影", desc: "光从门缝延伸出来。" },
   { src: "photos/5.jpg", caption: "2026年6月26日晚，书桌", category: "我的小盒子", desc: "一直没舍得吃。" },
-{ src: "photos/6.jpg", caption: "2026年6月22日晚，手抄心经", category: "文字", desc: "写字的时候能清楚的知道自己的整体状态。" },
+{ src: "photos/6.jpg", caption: "2026年6月22日晚，手抄心经", category: "笔痕", desc: "写字的时候能清楚的知道自己的整体状态。" },
 { src: "photos/7.jpg", caption: "2026年6月15日晚，病房四人", category: "人物", desc: "外婆的两个女儿和我。" },
 { src: "photos/8.jpg", caption: "2026年6月15日晚，病房三人", category: "人物", desc: "外婆，母亲和我。" },
 
