@@ -35,7 +35,7 @@ body { display: flex; flex-direction: column; background-image: url('photos/bg.j
 
 @media (max-width: 768px) {
   #sidebar { position: fixed; top: 53px; left: 0; height: calc(100vh - 53px); z-index: 140; }
-  #sidebar.open { width: 100%; min-width: unset; }
+  #sidebar.open { width: 60%; min-width: unset; }
   #gallery { padding: 12px; gap: 12px; grid-template-columns: 1fr; }
   .card { aspect-ratio: 4/3; }
 }
