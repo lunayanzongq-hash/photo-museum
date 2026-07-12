@@ -1,12 +1,12 @@
 ﻿const photos = [
   { src: "photos/1.jpg", caption: "2020年5月，鸡", category: "动物", desc: "封城时买的第一个相机，在镜头下第一次仔细看到了鸡的羽毛和色彩也很漂亮。" },
-  { src: "photos/2.jpg", caption: "2022年9月，湘湖", category: "风景", desc: "杭州萧山湘湖，环卫工人和景色融为一体。" },
+ 
   
   { src: "photos/4.jpg", caption: "2025年12月23日晚，房门口", category: "光影", desc: "光从门缝延伸出来。" },
-  { src: "photos/5.jpg", caption: "2026年6月26日晚，书桌", category: "我的小盒子", desc: "一直没舍得吃。" },
+ 
 { src: "photos/6.jpg", caption: "2026年6月22日晚，手抄心经", category: "笔痕", desc: "写字的时候能清楚的知道自己的整体状态。" },
 { src: "photos/7.jpg", caption: "2026年6月15日晚，病房四人", category: "人物", desc: "外婆的两个女儿和我。" },
-{ src: "photos/8.jpg", caption: "2026年6月15日晚，病房三人", category: "人物", desc: "外婆，母亲和我。" },
+
 
 
 ];
