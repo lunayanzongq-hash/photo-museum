@@ -1,5 +1,5 @@
 ﻿const photos = [
-  { src: "photos/1.jpg", caption: "2025年12月23日晚，光影", category: "光影", desc: "蓝白色的光从门缝延伸出来，作为页面的背景图刚好合适" },
+  { src: "photos/1.jpg", caption: "2025年12月23日晚，我的背景图", category: "光影", desc: "蓝白色的光从门缝延伸出来，作为页面的背景图刚好合适" },
  { src: "photos/2.jpg", caption: "2015年9月2日，和奶奶打纸牌", category: "时光", desc: "还没上小学时我就用“上大人”认了一些字，能和老人一起打纸牌" },
   { src: "photos/3.jpg", caption: "2015年9月11日，母亲陪着我去十堰入学", category: "人物", desc: "学校太远，被子之类的行李都是自己提去的" },
   { src: "photos/4.jpg", caption: "2016年10月3日，表哥结婚", category: "人物", desc: "那时大伯还在，姑父看着也年轻" },
