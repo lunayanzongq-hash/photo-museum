@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Photo Museum</title>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
   <div id="top-bar">
@@ -26,7 +26,7 @@
     <p id="lightbox-desc"></p>
     <button id="next">›</button>
   </div>
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
   <script>
     const sidebar = document.getElementById("sidebar");
     const brandName = document.getElementById("brand-name");
@@ -34,7 +34,7 @@
     function toggleSidebar(e) {
       if (e) e.stopPropagation();
       sidebar.classList.toggle("open");
-      brandName.textContent = sidebar.classList.contains("open") ? "分类目录" : "📷 YAN的影像博物馆";
+
     }
 
     document.addEventListener("click", (e) => {
