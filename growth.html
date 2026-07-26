@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浮光跃金 · 代码之河</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-deep:#0a1a2b;
+    --ink-mid:#12293f;
+    --river-dark:#0d2436;
+    --gold:#e8b95c;
+    --gold-bright:#ffdd8a;
+    --gold-dim:#a67c2e;
+    --paper:#f3e6c8;
+    --paper-line:#c9a35f;
+    --text-soft:#dce8ee;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;
+    width:100%;height:100%;
+    background:var(--ink-deep);
+    font-family:"Noto Serif SC", serif;
+    color:var(--text-soft);
+    overflow-x:hidden;
+  }
+
+  .scene{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 30% 8%, rgba(255,239,200,0.10), transparent 40%),
+      linear-gradient(180deg, var(--ink-deep) 0%, var(--ink-mid) 45%, var(--river-dark) 100%);
+    overflow:hidden;
+  }
+
+  .stars{
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 12%, #fff8, transparent),
+      radial-gradient(1px 1px at 60% 6%, #fff6, transparent),
+      radial-gradient(1.2px 1.2px at 80% 15%, #fff7, transparent),
+      radial-gradient(1px 1px at 40% 20%, #fff5, transparent),
+      radial-gradient(1.3px 1.3px at 90% 25%, #fff6, transparent),
+      radial-gradient(1px 1px at 10% 30%, #fff5, transparent);
+    opacity:.8;
+    pointer-events:none;
+  }
+
+  .moon{
+    position:absolute;
+    top:4%; right:12%;
+    width:70px;height:70px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff9e6, #ffe9a8 60%, #e8c974 100%);
+    box-shadow:0 0 40px 12px rgba(255,231,160,0.35), 0 0 90px 30px rgba(255,231,160,0.12);
+  }
+
+  h1.title{
+    position:relative;
+    text-align:center;
+    padding-top:36px;
+    margin:0;
+    font-size:1.7rem;
+    letter-spacing:.3em;
+    color:var(--gold-bright);
+    text-shadow:0 0 18px rgba(255,221,138,0.4);
+    z-index:3;
+  }
+  p.subtitle{
+    position:relative;
+    text-align:center;
+    margin:10px 0 0;
+    font-size:.85rem;
+    letter-spacing:.15em;
+    color:#9fb3c2;
+    z-index:3;
+  }
+
+  svg.stage{
+    position:relative;
+    display:block;
+    width:100%;
+    height:88vh;
+    z-index:2;
+  }
+
+  .stage-part{
+    cursor:pointer;
+    transition:filter .25s ease, opacity .25s ease;
+  }
+  .stage-part:hover, .stage-part.active{
+    filter:drop-shadow(0 0 10px rgba(255,221,138,0.85));
+  }
+  .stage-part:focus-visible{
+    outline:none;
+    filter:drop-shadow(0 0 14px rgba(255,221,138,1));
+  }
+
+  .hint-label{
+    font-size:13px;
+    fill:#cfe0ea;
+    opacity:0;
+    transition:opacity .2s ease;
+    pointer-events:none;
+    font-family:"Noto Serif SC", serif;
+  }
+  .stage-part:hover + .hint-label,
+  .stage-part:focus-visible + .hint-label{
+    opacity:.9;
+  }
+
+  .glint{
+    animation: glint-move 5.5s linear infinite;
+    opacity:.55;
+  }
+  .glint:nth-child(2){ animation-duration:7.2s; animation-delay:-2s; opacity:.4;}
+  .glint:nth-child(3){ animation-duration:4.3s; animation-delay:-1s; opacity:.5;}
+
+  @keyframes glint-move{
+    0%{ transform:translateX(-40px) translateY(0); }
+    50%{ transform:translateX(20px) translateY(6px); }
+    100%{ transform:translateX(-40px) translateY(0); }
+  }
+
+  .shimmer-rect{
+    animation: shimmer-shift 6s linear infinite;
+  }
+  @keyframes shimmer-shift{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-260px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .glint, .shimmer-rect{ animation:none !important; }
+  }
+
+  .scroll-panel{
+    position:fixed;
+    top:0; right:0;
+    height:100%;
+    width:min(400px, 88vw);
+    background:
+      linear-gradient(180deg, rgba(243,230,200,0.98), rgba(233,216,176,0.98));
+    color:#3a2e1a;
+    box-shadow:-10px 0 40px rgba(0,0,0,0.45);
+    transform:translateX(100%);
+    transition:transform .45s cubic-bezier(.22,.9,.3,1);
+    z-index:10;
+    padding:30px 28px;
+    overflow-y:auto;
+  }
+  .scroll-panel.open{ transform:translateX(0); }
+
+  .scroll-panel::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:6px;
+    background:repeating-linear-gradient(180deg, var(--paper-line) 0 2px, transparent 2px 10px);
+    opacity:.5;
+  }
+
+  .panel-close{
+    position:absolute; top:18px; right:18px;
+    background:none; border:none;
+    font-size:1.4rem; color:#6b5228;
+    cursor:pointer;
+    line-height:1;
+  }
+  .panel-close:hover{ color:#3a2e1a; }
+
+  .panel-eyebrow{
+    font-size:.75rem;
+    letter-spacing:.2em;
+    color:var(--gold-dim);
+    margin:6px 0 4px;
+  }
+  .panel-title{
+    font-size:1.4rem;
+    margin:0 0 4px;
+    color:#3a2e1a;
+  }
+  .panel-date{
+    font-size:.85rem;
+    color:#7a6238;
+    margin-bottom:18px;
+  }
+  .panel-text{
+    font-size:.98rem;
+    line-height:1.9;
+    white-space:pre-line;
+  }
+
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(5,10,18,0.35);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease;
+    z-index:9;
+  }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+
+  .footnote{
+    position:relative;
+    z-index:3;
+    text-align:center;
+    font-size:.75rem;
+    letter-spacing:.1em;
+    color:#5f7887;
+    padding:14px 0 26px;
+  }
+
+  @media (max-width:640px){
+    h1.title{ font-size:1.25rem; letter-spacing:.2em;}
+    svg.stage{ height:78vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="stars"></div>
+  <div class="moon"></div>
+
+  <h1 class="title">浮光跃金</h1>
+  <p class="subtitle">一棵树，一条河，一段学代码的旅程</p>
+
+  <svg class="stage" viewBox="0 0 1000 1300" preserveAspectRatio="xMidYMin meet">
+    <defs>
+      <linearGradient id="riverBase" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#123249"/>
+        <stop offset="100%" stop-color="#08141f"/>
+      </linearGradient>
+
+      <linearGradient id="shimmerGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"  stop-color="#e8b95c" stop-opacity="0"/>
+        <stop offset="8%"  stop-color="#ffe08a" stop-opacity="0.55"/>
+        <stop offset="16%" stop-color="#e8b95c" stop-opacity="0"/>
+        <stop offset="40%" stop-color="#e8b95c" stop-opacity="0"/>
+        <stop offset="48%" stop-color="#fff0c0" stop-opacity="0.5"/>
+        <stop offset="56%" stop-color="#e8b95c" stop-opacity="0"/>
+        <stop offset="80%" stop-color="#e8b95c" stop-opacity="0"/>
+        <stop offset="88%" stop-color="#ffe08a" stop-opacity="0.45"/>
+        <stop offset="96%" stop-color="#e8b95c" stop-opacity="0"/>
+      </linearGradient>
+
+      <clipPath id="riverClip">
+        <path d="M420,560
+                 C 380,620 340,660 300,700
+                 C 200,780 90,860 40,980
+                 C 0,1070 -20,1180 -10,1300
+                 L 1050,1300
+                 C 1060,1180 1030,1080 980,990
+                 C 900,850 760,760 660,690
+                 C 610,655 580,610 560,560 Z"/>
+      </clipPath>
+
+      <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="6" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <g>
+      <path d="M420,560
+               C 380,620 340,660 300,700
+               C 200,780 90,860 40,980
+               C 0,1070 -20,1180 -10,1300
+               L 1050,1300
+               C 1060,1180 1030,1080 980,990
+               C 900,850 760,760 660,690
+               C 610,655 580,610 560,560 Z"
+            fill="url(#riverBase)"/>
+
+      <g clip-path="url(#riverClip)">
+        <rect class="shimmer-rect" x="-260" y="500" width="1600" height="820" fill="url(#shimmerGrad)"/>
+        <rect class="shimmer-rect" x="-560" y="500" width="1600" height="820" fill="url(#shimmerGrad)" opacity="0.6" style="animation-duration:9s;"/>
+
+        <ellipse class="glint" cx="470" cy="640" rx="18" ry="5" fill="#fff2c8"/>
+        <ellipse class="glint" cx="330" cy="760" rx="24" ry="6" fill="#ffe9ab"/>
+        <ellipse class="glint" cx="700" cy="740" rx="20" ry="5" fill="#fff2c8"/>
+        <ellipse class="glint" cx="200" cy="920" rx="26" ry="6" fill="#ffe9ab"/>
+        <ellipse class="glint" cx="820" cy="900" rx="22" ry="5" fill="#fff2c8"/>
+      </g>
+
+      <path d="M370,650 C 300,720 200,800 140,900" stroke="#3d5a70" stroke-width="2" fill="none" opacity="0.4"/>
+      <path d="M600,660 C 680,730 780,800 850,900" stroke="#3d5a70" stroke-width="2" fill="none" opacity="0.4"/>
+    </g>
+
+    <g class="stage-part" data-stage="roots" tabindex="0" role="button" aria-label="根部：最初接触编程">
+      <path d="M470,560
+               C 450,590 430,610 400,640
+               C 430,600 440,585 460,565 Z
+               M500,560
+               C 495,600 490,630 480,665
+               M520,560
+               C 530,595 535,625 530,660
+               M540,560
+               C 560,590 580,615 605,635"
+            fill="#3a2a18" stroke="#5a4326" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" filter="url(#soft-glow)"/>
+    </g>
+    <text class="hint-label" x="330" y="600">根 · 最初接触编程</text>
+
+    <g class="stage-part" data-stage="trunk" tabindex="0" role="button" aria-label="树干：系统学习基础阶段">
+      <path d="M485,560
+               C 480,470 478,380 490,290
+               C 495,250 505,220 512,190
+               L 528,190
+               C 532,230 540,260 545,290
+               C 555,380 552,470 545,560 Z"
+            fill="#4a3620" stroke="#6b4e2b" stroke-width="4" filter="url(#soft-glow)"/>
+    </g>
+    <text class="hint-label" x="560" y="400">干 · 系统学习基础</text>
+
+    <g class="stage-part" data-stage="branches" tabindex="0" role="button" aria-label="树枝：动手做项目阶段">
+      <path d="M500,300
+               C 440,270 380,250 320,235
+               M505,260
+               C 460,220 420,190 380,150
+               M525,300
+               C 590,265 650,245 710,235
+               M520,255
+               C 570,210 615,175 660,140"
+            fill="none" stroke="#5a4326" stroke-width="9" stroke-linecap="round" filter="url(#soft-glow)"/>
+    </g>
+    <text class="hint-label" x="300" y="200">枝 · 动手做项目</text>
+
+    <g class="stage-part" data-stage="canopy" tabindex="0" role="button" aria-label="树冠：近期的成长阶段">
+      <ellipse cx="520" cy="150" rx="180" ry="110" fill="#2f5233" filter="url(#soft-glow)"/>
+      <ellipse cx="400" cy="190" rx="110" ry="75" fill="#345c39" opacity="0.9"/>
+      <ellipse cx="640" cy="180" rx="120" ry="80" fill="#345c39" opacity="0.9"/>
+      <ellipse cx="520" cy="90"  rx="130" ry="70" fill="#3d6a42" opacity="0.9"/>
+    </g>
+    <text class="hint-label" x="700" y="120">冠 · 近期的成长</text>
+
+  </svg>
+
+  <p class="footnote">点击树的各个部位，展开对应阶段的日记</p>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="scroll-panel" id="panel" aria-hidden="true">
+  <button class="panel-close" id="panelClose" aria-label="关闭">×</button>
+  <p class="panel-eyebrow" id="panelEyebrow">阶段</p>
+  <h2 class="panel-title" id="panelTitle">标题</h2>
+  <p class="panel-date" id="panelDate">时间</p>
+  <div class="panel-text" id="panelText">正文</div>
+</aside>
+
+<script>
+const STAGE_CONTENT = {
+  roots: {
+    eyebrow: "根 · Roots",
+    title: "最初接触编程",
+    date: "2026年3月至6月",
+    text: `2026-03-06创建GitHub账号，2026-04-16
+初次尝试GitHub下载安装程序，学习使用GitHub资源，2026-04-18
+YouTube看了一个怎么搭建自己的VPN的视频，想着试试学习用github下载v2ray在电脑用，成功了，很开心。2026-05-13
+第一次打开代码页面，安装运行成功GitHub代码。第一次打开编辑器，敲下第一行能跑起来的代码。
+那时候什么都不懂，连报错信息都要一个一个查。2016-05-16
+把代码成功推送到了github个人仓库，新建了一个模型。2026-06-28
+建立自己的第一个网站。
+（待填写）`
+  },
+  trunk: {
+    eyebrow: "干 · Trunk",
+    title: "待填写",
+    date: "待填写",
+    text: `待填写。
+
+（在这里替换成你自己日记里的原文片段）`
+  },
+  branches: {
+    eyebrow: "枝 · Branches",
+    title: "动手做项目",
+    date: "2021 – 2022 年",
+    text: `开始尝试真正做点东西出来，第一次把 Git、部署、调试这些
+零散的知识串起来，做成了能给别人看的东西。
+
+（在这里替换成你自己日记里的原文片段，比如你的个人网站项目）`
+  },
+  canopy: {
+    eyebrow: "冠 · Canopy",
+    title: "近期的成长",
+    date: "2026年至今",
+    text: `视野慢慢打开，也开始愿意把过程记录下来，而不只是结果。
+
+（在这里替换成你自己日记里的原文片段）`
+  }
+};
+
+const panel = document.getElementById('panel');
+const overlay = document.getElementById('overlay');
+const panelEyebrow = document.getElementById('panelEyebrow');
+const panelTitle = document.getElementById('panelTitle');
+const panelDate = document.getElementById('panelDate');
+const panelText = document.getElementById('panelText');
+const panelClose = document.getElementById('panelClose');
+
+let activeEl = null;
+
+function openStage(stageKey, el){
+  const data = STAGE_CONTENT[stageKey];
+  if(!data) return;
+
+  if(activeEl) activeEl.classList.remove('active');
+  activeEl = el;
+  el.classList.add('active');
+
+  panelEyebrow.textContent = data.eyebrow;
+  panelTitle.textContent = data.title;
+  panelDate.textContent = data.date;
+  panelText.textContent = data.text;
+
+  panel.classList.add('open');
+  panel.setAttribute('aria-hidden', 'false');
+  overlay.classList.add('show');
+}
+
+function closePanel(){
+  panel.classList.remove('open');
+  panel.setAttribute('aria-hidden', 'true');
+  overlay.classList.remove('show');
+  if(activeEl){ activeEl.classList.remove('active'); activeEl = null; }
+}
+
+document.querySelectorAll('.stage-part').forEach(el => {
+  el.addEventListener('click', () => openStage(el.dataset.stage, el));
+  el.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      openStage(el.dataset.stage, el);
+    }
+  });
+});
+
+panelClose.addEventListener('click', closePanel);
+overlay.addEventListener('click', closePanel);
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closePanel();
+});
+</script>
+
+</body>
+</html>

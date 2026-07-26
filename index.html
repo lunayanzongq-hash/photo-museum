@@ -45,6 +45,8 @@
       z-index: 1;
       display: flex; 
       gap: 24px; 
+      flex-wrap: wrap;
+      justify-content: center;
     }
     .card { 
       width: 160px; 
@@ -69,6 +71,17 @@
     .card .icon { font-size: 2.5rem; }
     .card .label { font-size: 1rem; color: #ddd; }
 
+    .growth-card{
+      background: linear-gradient(135deg, #12293f, #08141f);
+      border: 1px solid #3d5a70;
+    }
+    .growth-card .icon{
+      color: #e8b95c;
+    }
+    .growth-card .label{
+      color: #9fb3c2;
+    }
+
     @media (max-width: 600px) {
       h1 { font-size: 1.1rem; max-width: 90%; }
       .cards { gap: 16px; }
@@ -87,6 +100,10 @@
     <a class="card" href="writing.html">
       <div class="icon">✍️</div>
       <div class="label">文字</div>
+    </a>
+    <a class="card growth-card" href="growth.html">
+      <div class="icon">🌳</div>
+      <div class="label">生长</div>
     </a>
   </div>
 </body>

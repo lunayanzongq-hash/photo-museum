@@ -1,4 +1,5 @@
 ﻿const articles = [
+    
   {
     title: "没有一种批判比自我批判更强烈",
     date: "2026-04-08",
