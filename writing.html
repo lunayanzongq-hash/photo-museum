@@ -169,7 +169,7 @@
       document.body.classList.add("reading");
       document.getElementById("art-title").textContent = articles[i].title;
       document.getElementById("art-date").textContent = articles[i].date;
-      artBody.textContent = articles[i].content;
+     artBody.innerHTML = articles[i].content;
       window.scrollTo({ top: 0, behavior: "smooth" });
       document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
       articleNav.children[i].classList.add("active");
