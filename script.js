@@ -1,9 +1,9 @@
 ﻿const photos = [
   { src: "photos/1.jpg", caption: "2025年12月23日晚，我的背景图", category: "光影", desc: "蓝白色的光从门缝延伸出来，作为页面的背景图刚好合适" },
-  { src: "photos/4.jpg", caption: "2016年10月3日，表哥结婚", category: "人物", desc: "那时大伯还在，姑父看着也年轻" },
+  { src: "photos/4.jpg", caption: "2016年10月3日，表哥结婚", category: "人物", desc: "那时大伯还在，姑父看着也年轻的多" },
   { src: "photos/5.jpg", caption: "2016年10月6日，奶奶在门口坐着", category: "人物", desc: "每个人都有自己的孤独时刻" },
-{ src: "photos/6.jpg", caption: "2017年5月19日，奶奶对着镜头笑", category: "人物", desc: "那时对她来说手机拍照还很新奇" },
-{ src: "photos/9.jpg", caption: "2020年5月4日，奶奶卧床几年了", category: "人物", desc: "那几年都很辛苦，面对生老病死有太多无奈，尽力而为" },
+{ src: "photos/6.jpg", caption: "2017年5月19日，奶奶对着镜头笑", category: "人物", desc: "那时对她来说手机拍照还很新奇，很喜欢这张照片" },
+{ src: "photos/9.jpg", caption: "2020年5月4日，奶奶卧床几年了", category: "人物", desc: "那几年照顾的都很辛苦，面对生老病死有太多无奈，尽力而为" },
 
 
 ];

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YAN的文字博物馆</title>
+  <title>YAN——理解世界</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { 
@@ -13,6 +13,13 @@
       color: #222; font-family: sans-serif; min-height: 100vh; 
       transition: background 0.6s ease;
     }
+    #art-body p {
+  text-indent: 2em;
+  margin: 0 0 0.5em;
+}
+#art-body p.qa-line {
+  margin-top: 1.2em;
+}
     body.reading {
       background-image: none;
       background-color: #f5ecd4;
@@ -131,7 +138,21 @@
     const brandName = document.getElementById("brand-name");
     let fontSize = 18;
     content.style.fontSize = fontSize + "px";
+function formatText(str) {
+  let escaped = str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/\[\[([0-9A-Fa-f]{6}):(.+?)\]\]/g, '<span style="color:#$1">$2</span>');
 
+  const lines = escaped.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+
+  return lines.map(line => {
+    const isQuestion = /^Yan[：:]/.test(line);
+    return `<p class="${isQuestion ? 'qa-line' : ''}">${line}</p>`;
+  }).join("");
+}
     window.addEventListener("scroll", () => {
       backTop.classList.toggle("visible", window.scrollY > 300);
     });
@@ -169,8 +190,7 @@
       document.body.classList.add("reading");
       document.getElementById("art-title").textContent = articles[i].title;
       document.getElementById("art-date").textContent = articles[i].date;
-     artBody.innerHTML = articles[i].content;
-      window.scrollTo({ top: 0, behavior: "smooth" });
+artBody.innerHTML = formatText(articles[i].content);      window.scrollTo({ top: 0, behavior: "smooth" });
       document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
       articleNav.children[i].classList.add("active");
     }
