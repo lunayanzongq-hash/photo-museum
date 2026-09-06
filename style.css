@@ -27,8 +27,14 @@ body { display: flex; flex-direction: column; background-image: url('photos/bg.j
 
 #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; z-index: 200; }
 #lightbox.hidden { display: none; }
-#lightbox img { max-width: 80vw; max-height: 75vh; border-radius: 6px; }
-#lightbox p { font-size: 1rem; color: #ccc; }
+#lightbox img {
+  max-width: 94vw;
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}#lightbox p { font-size: 1rem; color: #ccc; }
 #close { position: absolute; top: 16px; right: 24px; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; }
 #prev, #next { position: absolute; top: 50%; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 2.5rem; cursor: pointer; padding: 10px 18px; border-radius: 6px; transform: translateY(-50%); }
 #prev { left: 16px; } #next { right: 16px; }

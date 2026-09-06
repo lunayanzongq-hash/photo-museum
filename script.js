@@ -68,10 +68,10 @@ function openPhoto(i, list) {
   lbImg.src = filtered[i].src;
   lbCaption.textContent = filtered[i].caption;
   lbDesc.textContent = filtered[i].desc || "";
+  lbImg.style.transform = "scale(1)"; 
+  lbImg.dataset.scale = "1";          
   lightbox.classList.remove("hidden");
 }
-lbImg.style.transform = "scale(1)";
-lbImg.dataset.scale = "1";
 document.getElementById("close").onclick = () => lightbox.classList.add("hidden");
 document.getElementById("prev").onclick = () => openPhoto((current - 1 + filtered.length) % filtered.length, filtered);
 document.getElementById("next").onclick = () => openPhoto((current + 1) % filtered.length, filtered);
