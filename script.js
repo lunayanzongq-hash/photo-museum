@@ -9,14 +9,14 @@
 { src: "photos/8.jpg", caption: "2017年，下着小雨的武当山", category: "2015-2019", desc: "武当山很大，里面的生活用品只能人力挑上去。" },
 { src: "photos/9.jpg", caption: "2017年1月1日，和莎莎一起吃饭", category: "2015-2019", desc: "那时节假日如果不回武汉会约着一起吃这家，实惠好吃。" },
 { src: "photos/10.jpg", caption: "2016年，医学之父庇佑你们", category: "2015-2019", desc: "去五号楼上课总是看到这几只狗在这里晒太阳。" },
-{ src: "photos/11.jpg", caption: "2016年，医学生的期末", category: "2015-2019", desc: "" },
+{ src: "photos/11.jpg", caption: "2016年，医学生的期末", category: "2015-2019", desc: "宿舍复习。" },
 { src: "photos/12.jpg", caption: "2017年，十堰人民公园", category: "2015-2019", desc: "" },
 { src: "photos/13.jpg", caption: "2017年，夜间硬座", category: "2015-2019", desc: "腰坐累了，起来活动身体的时候看到背后的乘客在看余华的书。" },
 { src: "photos/14.jpg", caption: "2017年，火车站", category: "2015-2019", desc: "在外地上学，不知道看了多少次火车站这场景。" },
-{ src: "photos/15.jpg", caption: "火车上的爷孙", category: "2015-2019", desc: "小孩好像是身体有什么疾病，爷爷带着出来玩还是看病，听了很多现在想不起来了的故事。" },
-{ src: "photos/16.jpg", caption: "2018年，莎莎", category: "2015-2019", desc: "随州校区宿舍里，学校志愿者活动我主动报名做摄像拿到了相机，其实那还是我第一次用相机，先给莎莎拍了。" },
+{ src: "photos/15.jpg", caption: "火车上的爷孙", category: "2015-2019", desc: "小孩好像是身体有什么疾病，爷爷带着出来玩还是看病，说了很多。" },
+{ src: "photos/16.jpg", caption: "2018年，莎莎", category: "2015-2019", desc: "随州校区宿舍里，第二天的志愿者活动我主动报名做摄像拿到了相机，其实那还是我第一次用相机，先给莎莎拍了。" },
 { src: "photos/17.jpg", caption: "2018年，腾波", category: "2015-2019", desc: "借着志愿活动摄像的名义，自己到处跑到处拍。" },
-{ src: "photos/18.jpg", caption: "2017年12月，莎莎", category: "2015-2019", desc: "回十堰校区考六级，和莎莎碰面，在公园爬山 ，那时我已经去随州校区了，难得回一次十堰。" },
+{ src: "photos/18.jpg", caption: "2017年12月，莎莎", category: "2015-2019", desc: "回十堰校区考六级，和莎莎碰面，公园爬山 ，那时我已经去随州校区了，难得回一次十堰。" },
 { src: "photos/19.jpg", caption: "2018年，手抓饼阿姨的朋友圈", category: "2015-2019", desc: "想不起来怎么加的阿姨的微信，只有这张截图一直留着，备注着。" },
 { src: "photos/20.jpg", caption: "2018年，实习宿舍", category: "2015-2019", desc: "小小一块空间，看到这张桌子就想起了一个人关在里面的一段时间。" },
 { src: "photos/21.jpg", caption: "2018年，我和芳芳老师", category: "2015-2019", desc: "那时总跟着芳芳老师去病房，做完床边治疗等仪器的时候我们就坐着看病房的电视。" },
@@ -131,10 +131,10 @@ function openPhoto(i, list) {
   current = i;
   filtered = list;
   lbImg.src = filtered[i].src;
+  lbImg.style.transform = "scale(1)";
+  lbImg.dataset.scale = "1";
   lightbox.classList.remove("hidden");
 }
-lbImg.style.transform = "scale(1)";
-lbImg.dataset.scale = "1";
 document.getElementById("close").onclick = () => lightbox.classList.add("hidden");
 document.getElementById("prev").onclick = () => openPhoto((current - 1 + filtered.length) % filtered.length, filtered);
 document.getElementById("next").onclick = () => openPhoto((current + 1) % filtered.length, filtered);
