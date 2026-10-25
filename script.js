@@ -18,9 +18,22 @@
 { src: "photos/9.jpg", caption: "2013年11月11日，四代同堂", category: "山的这头", desc: "照片从左往右分别是奶奶，姑姑，姑姑的小孙子，姑姑的婆婆。" },
 { src: "photos/10.jpg", caption: "2018年4月24日，等火车也要很销魂", category: "2015-2019", desc: "汉口火车站最边缘洗手间出来看到这一幕，疲惫一扫而空。" },
 { src: "photos/20.jpg", caption: "2018年10月，实习的宿舍床", category: "2015-2019", desc: "小小一块空间，看到这张桌子就想起了一个人关在里面的一段时间。" },
-{ src: "photos/12.jpg", caption: "2016年11月27日，许愿", category: "2015-2019", desc: "在襄阳旅行一处景点写的，依然中二。" },
 { src: "photos/21.jpg", caption: "2018年9月，我和芳芳老师", category: "2015-2019", desc: "那时总跟着芳芳老师去病房，做完治疗等仪器的时候我们就坐着看病房的电视休息会。" },
 { src: "photos/22.jpg", caption: "2015年9月13日，初入学", category: "2015-2019", desc: "逝者如斯夫。" },
+{ src: "photos/23.jpg", caption: "2026年10月24日，无人机拍摄湖里的鸬鹚", category: "2026", desc: "今年拍的照片里目前最喜欢的一张，自由，治愈。" },
+{ src: "photos/24.jpg", caption: "2026年10月24日，无人机与我", category: "2026", desc: "I'm watching you." },
+{ src: "photos/25.jpg", caption: "2018年7月28日，眼睛", category: "山的这头", desc: "回看时，有些照片是不忍多看的，但是仅有的几张照片了。" },
+{ src: "photos/26.jpg", caption: "2017年1月1日，和莎莎一起下馆子的日子", category: "2015-2019", desc: "学校离武汉很远我们就很少回去，这家店美味还实惠，过节时总去吃。" },
+{ src: "photos/12.jpg", caption: "2016年9月21日，五号教学楼和十堰的蓝天", category: "2015-2019", desc: "很喜欢十堰的蓝天，常一个人去这栋楼复习。" },
+{ src: "photos/27.jpg", caption: "2020年5月15日，过桥米线", category: "2019-2022", desc: "训练完最奢侈的只是不自己做饭，吃碗12块的过桥米线。" },
+{ src: "photos/28.jpg", caption: "2019年5月2日，西山水坑里的蝌蚪", category: "2019-2022", desc: "哈哈，单纯觉得我拍得好。" },
+{ src: "photos/29.jpg", caption: "2021年5月26日，上身肌肉", category: "2019-2022", desc: "无他，纯展示。" },
+{ src: "photos/30.jpg", caption: "2022年3月18日，深蹲", category: "2019-2022", desc: "动作质量很满意，我这该死的完美。" },
+{ src: "photos/31.jpg", caption: "2022年9月27日，alone", category: "2019-2022", desc: "晚上遛狗常发呆。伤心的是，我走后，狗都没了。" },
+{ src: "photos/32.jpg", caption: "2020年7月7日，高杠深蹲 ", category: "2019-2022", desc: "下身肌肉明显练出来了，很少穿紧身的衣服，记得这是迪卡侬的童装短裤。" },
+{ src: "photos/33.jpg", caption: "2021年4月29日，下身肌肉", category: "2019-2022", desc: "无他，纯展示。" },
+{ src: "photos/34.jpg", caption: "2020年7月7日，相扑硬拉", category: "2019-2022", desc: "最喜欢的一套衣服和相扑硬拉的动作。" },
+{ src: "photos/35.jpg", caption: "2021年9月11日，带母亲游西湖", category: "2019-2022", desc: "那是她第一次去外省，还是一个人。只因我的天真" },
 
 
 ];
