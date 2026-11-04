@@ -33,10 +33,11 @@
 { src: "photos/32.jpg", caption: "2020年7月7日，高杠深蹲 ", category: "2019-2022", desc: "下身肌肉明显练出来了，很少穿紧身的衣服，记得这是迪卡侬的童装短裤。" },
 { src: "photos/33.jpg", caption: "2021年4月29日，下身肌肉", category: "2019-2022", desc: "无他，纯展示。" },
 { src: "photos/34.jpg", caption: "2020年7月7日，相扑硬拉", category: "2019-2022", desc: "最喜欢的一套衣服和相扑硬拉的动作。" },
-{ src: "photos/35.jpg", caption: "2021年9月11日，带母亲游西湖", category: "2019-2022", desc: "那是她第一次去外省，还是一个人。只因我的天真" },
+{ src: "photos/35.jpg", caption: "2021年9月11日，带母亲游西湖", category: "2019-2022", desc: "那是她第一次去外省，还是一个人。只因我的天真。" },
 
 
-];
+];// 缩略图路径：photos/1.jpg -> photos/thumb/1.jpg
+photos.forEach(p => { p.thumb = p.src.replace("photos/", "photos/thumb/"); });
 // 从说明文字里解析日期，用于按时间顺序排列。
 // 只有年份的，月/日默认取年中（6月15日），避免总是排在最前面。
 // 完全没有年份的（如"火车上的爷孙"），沿用前一张有日期照片的年份，作为近似排序依据。
@@ -113,8 +114,7 @@ function render(list) {
     const hasDesc = p.desc && p.desc.trim().length > 0;
     item.innerHTML =
       "<div class='tl-card'>" +
-        "<img src='" + p.src + "' alt='" + p.caption + "'>" +
-        "<div class='label'>" + p.caption + "</div>" +
+"<img src='" + p.thumb + "' alt='" + p.caption + "' loading='lazy' decoding='async'>" +        "<div class='label'>" + p.caption + "</div>" +
         (hasDesc
           ? "<div class='tl-toggle'>展开 ▾</div><div class='tl-desc'>" + p.desc + "</div>"
           : "") +
@@ -144,6 +144,8 @@ function openPhoto(i, list) {
   current = i;
   filtered = list;
   lbImg.src = filtered[i].src;
+  const next = new Image();
+next.src = filtered[(i + 1) % filtered.length].src;
   lbImg.style.transform = "scale(1)";
   lbImg.dataset.scale = "1";
   lightbox.classList.remove("hidden");

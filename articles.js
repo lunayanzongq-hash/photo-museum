@@ -1,4 +1,4 @@
-﻿const articles = [
+﻿const articles = [ 
     {
     title: "Counting Stars",
     date: "2026-10-18",
