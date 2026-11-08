@@ -1,46 +1,334 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YAN——看见世界</title>
-  <link rel="stylesheet" href="style.css?v=10" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YAN——看见世界</title>
+
+<link rel="stylesheet" href="style.css?v=10" />
+
+<style>
+/* 右上角操作区 */
+
+.top-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.music-page-btn,
+.room-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 5px 10px;
+
+  border: 1px solid rgba(226,197,158,.25);
+  border-radius: 6px;
+
+  background: rgba(255,255,255,.04);
+  color: #e8d8c1;
+
+  font-family: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+
+  transition: all .2s;
+}
+
+.music-page-btn {
+  font-family: Georgia,serif;
+  font-size: 1.2rem;
+  min-width: 36px;
+}
+
+.music-page-btn:hover,
+.room-menu-btn:hover {
+  color: #d49a68;
+  background: rgba(201,145,95,.15);
+  border-color: rgba(201,145,95,.45);
+}
+
+/* 房间菜单 */
+
+.room-switcher {
+  position: relative;
+}
+
+.room-menu {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 300;
+
+  min-width: 155px;
+  padding: 6px;
+
+  border: 1px solid rgba(207,165,111,.4);
+  border-radius: 9px;
+
+  background: rgba(39,27,19,.97);
+
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transform: translateY(-5px);
+  transition: opacity .2s,transform .2s,visibility .2s;
+}
+
+.room-menu.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.room-menu button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  width: 100%;
+  padding: 11px 12px;
+
+  border: 0;
+  border-radius: 5px;
+
+  background: transparent;
+  color: #e8d8c1;
+
+  font-family: inherit;
+  font-size: .85rem;
+  text-align: left;
+
+  cursor: pointer;
+  transition: background .2s,color .2s;
+}
+
+.room-menu button:hover {
+  background: rgba(201,145,95,.16);
+  color: #e6b17e;
+}
+
+@media(max-width:600px) {
+  .top-actions {
+    gap: 5px;
+  }
+
+  .music-page-btn,
+  .room-menu-btn {
+    min-height: 32px;
+    padding: 4px 7px;
+    font-size: .78rem;
+  }
+
+  .music-page-btn {
+    min-width: 32px;
+    font-size: 1.1rem;
+  }
+}
+
+@media(max-width:380px) {
+  .room-menu-btn span {
+    font-size: .7rem;
+  }
+
+  .top-actions {
+    gap: 4px;
+  }
+}
+</style>
 </head>
+
 <body>
-  <div id="top-bar">
-    <button id="toggle-btn" onclick="toggleSidebar(event)">☰</button>
-    <span id="brand-name">YAN——看见世界</span>
-  </div>
-  <div id="main-wrap">
-    <aside id="sidebar">
-      <a id="back-btn" href="index.html">← 返回主页</a>
-      <nav id="nav"></nav>
-    </aside>
-    <main id="gallery"></main>
-  </div>
-  <div id="lightbox" class="hidden">
-    <button id="close">✕</button>
-    <button id="prev">‹</button>
-    <img id="lightbox-img" src="" alt="" />
-    <button id="next">›</button>
-  </div>
-  <script src="script.js?v=9"></script>
-  <script>
-    const sidebar = document.getElementById("sidebar");
-    const brandName = document.getElementById("brand-name");
 
-    function toggleSidebar(e) {
-      if (e) e.stopPropagation();
-      sidebar.classList.toggle("open");
+<!-- 顶部导航 -->
 
-    }
+<div id="top-bar">
 
-    document.addEventListener("click", (e) => {
-      if (sidebar.classList.contains("open") && !sidebar.contains(e.target)) {
-        sidebar.classList.remove("open");
-        brandName.textContent = " YAN——看见世界";
-      }
-    });
-  </script>
+  <button
+    id="toggle-btn"
+    onclick="toggleSidebar(event)"
+    aria-label="打开或关闭分类菜单"
+  >☰</button>
+
+  <span id="brand-name">YAN——看见世界</span>
+
+  <div class="top-actions">
+
+    <!-- 音乐按钮 -->
+
+    <button
+      id="music-btn"
+      class="music-page-btn"
+      type="button"
+      aria-label="打开音乐播放器"
+      title="音乐播放器"
+    >♫</button>
+
+    <!-- 选择房间 -->
+
+    <div class="room-switcher">
+
+      <button
+        id="room-menu-btn"
+        class="room-menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-label="房间"
+      >
+        <span>房间</span>⌄
+      </button>
+
+      <div id="room-menu" class="room-menu">
+
+        <button type="button" data-page="home.html">
+          卧室
+        </button>
+
+        <button type="button" data-page="writing.html">
+           书房
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 页面主体 -->
+
+<div id="main-wrap">
+
+  <aside id="sidebar">
+    <nav id="nav"></nav>
+  </aside>
+
+  <main id="gallery"></main>
+
+</div>
+
+<!-- 图片灯箱 -->
+
+<div id="lightbox" class="hidden">
+
+  <button id="close" aria-label="关闭图片">✕</button>
+
+  <button id="prev" aria-label="上一张">‹</button>
+
+  <img id="lightbox-img" src="" alt="" />
+
+  <button id="next" aria-label="下一张">›</button>
+
+</div>
+
+<script src="script.js?v=9"></script>
+
+<script>
+/* =================================
+   侧边栏
+================================= */
+
+const sidebar = document.getElementById("sidebar");
+
+function toggleSidebar(e) {
+  if (e) e.stopPropagation();
+  sidebar.classList.toggle("open");
+}
+
+document.addEventListener("click", (e) => {
+
+  if (
+    sidebar.classList.contains("open") &&
+    !sidebar.contains(e.target) &&
+    !e.target.closest("#toggle-btn")
+  ) {
+    sidebar.classList.remove("open");
+  }
+
+});
+
+/* =================================
+   音乐播放器入口
+================================= */
+
+document.getElementById("music-btn").addEventListener("click", () => {
+
+  window.parent.postMessage({
+    type: "open-player"
+  }, "*");
+
+});
+
+/* =================================
+   选择房间菜单
+================================= */
+
+const roomMenuBtn = document.getElementById("room-menu-btn");
+const roomMenu = document.getElementById("room-menu");
+
+roomMenuBtn.addEventListener("click", (e) => {
+
+  e.stopPropagation();
+
+  const isOpen = roomMenu.classList.toggle("open");
+
+  roomMenuBtn.setAttribute(
+    "aria-expanded",
+    isOpen ? "true" : "false"
+  );
+
+});
+
+/* 点击菜单项目切换页面 */
+
+roomMenu.querySelectorAll("button[data-page]").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    const page = button.dataset.page;
+
+    roomMenu.classList.remove("open");
+
+    roomMenuBtn.setAttribute("aria-expanded", "false");
+
+    window.parent.postMessage({
+      type: "navigate",
+      page: page
+    }, "*");
+
+  });
+
+});
+
+/* 点击其他区域关闭菜单 */
+
+document.addEventListener("click", (e) => {
+
+  if (
+    !roomMenu.contains(e.target) &&
+    !roomMenuBtn.contains(e.target)
+  ) {
+
+    roomMenu.classList.remove("open");
+
+    roomMenuBtn.setAttribute("aria-expanded", "false");
+
+  }
+
+});
+
+</script>
+
 </body>
 </html>

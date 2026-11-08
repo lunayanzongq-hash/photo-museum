@@ -1,0 +1,972 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>YAN</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #0b0705;
+}
+
+body {
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  color: #f1e2c4;
+}
+
+#backdrop {
+  position: fixed;
+  inset: -80px;
+  width: calc(100% + 160px);
+  height: calc(100% + 160px);
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(36px) brightness(.62) saturate(1.1);
+  transition: filter .8s ease;
+}
+
+body.off #backdrop {
+  filter: blur(36px) brightness(.14) saturate(.8);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 85% 90% at 50% 52%,
+    transparent 58%,
+    rgba(8,4,2,.42) 100%
+  );
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  transition: transform 1s cubic-bezier(.65,0,.35,1);
+}
+
+#room {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#fade {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .5s ease .45s;
+}
+
+#fade.show {
+  opacity: 1;
+}
+
+h1 {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: 22px;
+  z-index: 5;
+  font-weight: 400;
+  letter-spacing: .32em;
+  font-size: clamp(.9rem,1.6vw,1.15rem);
+  color: #f1e2c4;
+  text-shadow: 0 1px 8px rgba(0,0,0,.85);
+  pointer-events: none;
+}
+
+#hint {
+  position: fixed;
+  bottom: max(14px,env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  z-index: 5;
+  text-align: center;
+  font-size: .78rem;
+  letter-spacing: .2em;
+  opacity: .75;
+  text-shadow: 0 1px 6px rgba(0,0,0,.9);
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+
+#hint.gone {
+  opacity: 0;
+}
+
+.dim, .dim-lamp {
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+
+body.off .dim {
+  opacity: 1;
+}
+
+body.off .dim-lamp {
+  opacity: .85;
+}
+
+/* 吊灯 */
+
+#lamp {
+  cursor: pointer;
+  outline: none;
+}
+
+.ring {
+  fill: none;
+  stroke: #ffd596;
+  stroke-width: 2;
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+#lamp:hover .ring,
+#lamp:focus-visible .ring {
+  opacity: .95;
+}
+
+#lamp.hint .ring,
+body.off #lamp .ring {
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+body.off #lamp .lamp-tip {
+  opacity: .75;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 0; }
+  50% { opacity: .85; }
+}
+
+.lamp-tip {
+  font-size: 17px;
+  letter-spacing: 4px;
+  fill: #fff1d4;
+  opacity: 0;
+  transition: opacity .25s;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,.85);
+  stroke-width: 4px;
+  pointer-events: none;
+}
+
+#lamp:hover .lamp-tip,
+#lamp:focus-visible .lamp-tip {
+  opacity: 1;
+}
+
+/* 笔记本 */
+
+.nb {
+  cursor: pointer;
+  outline: none;
+}
+
+.nb .lift {
+  transition: transform .3s cubic-bezier(.2,.8,.3,1),
+              filter .3s ease;
+}
+
+.nb:hover .lift,
+.nb:focus-visible .lift {
+  transform: translateY(-9px);
+  filter: drop-shadow(0 12px 9px rgba(0,0,0,.55)) brightness(1.06);
+}
+
+body.off .nb:hover .lift,
+body.off .nb:focus-visible .lift {
+  filter: drop-shadow(0 12px 9px rgba(0,0,0,.6)) brightness(1.7);
+}
+
+/* 复古木质收音机 */
+
+#radio {
+  cursor: pointer;
+  outline: none;
+}
+
+#radio .radio-body {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: filter .3s ease, transform .3s ease;
+}
+
+#radio:hover .radio-body,
+#radio:focus-visible .radio-body {
+  transform: translateY(-5px);
+  filter: brightness(1.07) drop-shadow(0 12px 9px rgba(0,0,0,.4));
+}
+
+#radio.playing .radio-light {
+  opacity: 1;
+  animation: radioGlow 2.4s ease-in-out infinite;
+}
+
+#radio.playing .radio-indicator {
+  fill: #ffd27e;
+  filter: url(#radioGlowFilter);
+}
+
+#radio.playing .radio-meter {
+  animation: meterMove 2s ease-in-out infinite alternate;
+}
+
+@keyframes radioGlow {
+  0%,100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+
+@keyframes meterMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(20px); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  #stage,#fade,.dim,.dim-lamp,#backdrop,
+  .nb .lift,#radio .radio-body {
+    transition: none !important;
+  }
+
+  #lamp.hint .ring,
+  body.off #lamp .ring,
+  #radio.playing .radio-light,
+  #radio.playing .radio-meter {
+    animation: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<img id="backdrop" src="photos/room.jpg" alt="">
+
+<h1>YAN</h1>
+
+<div id="stage">
+
+<svg id="room"
+     viewBox="0 260 2568 1086"
+     preserveAspectRatio="xMidYMid slice"
+     role="img"
+     aria-label="一间温暖的小卧室">
+
+<defs>
+
+  <radialGradient id="dimG"
+    gradientUnits="userSpaceOnUse"
+    cx="724" cy="880" r="1500">
+    <stop offset="0" stop-color="#070b18" stop-opacity=".5"/>
+    <stop offset=".55" stop-color="#070b18" stop-opacity=".78"/>
+    <stop offset="1" stop-color="#05070f" stop-opacity=".9"/>
+  </radialGradient>
+
+  <radialGradient id="lampDim">
+    <stop offset="0" stop-color="#0a0806" stop-opacity="1"/>
+    <stop offset="1" stop-color="#0a0806" stop-opacity="0"/>
+  </radialGradient>
+
+  <!-- 收音机木材 -->
+  <linearGradient id="woodMain" x1="0" y1="0" x2=".9" y2="1">
+    <stop offset="0" stop-color="#bc8b57"/>
+    <stop offset=".18" stop-color="#91623b"/>
+    <stop offset=".48" stop-color="#684125"/>
+    <stop offset=".8" stop-color="#49301e"/>
+    <stop offset="1" stop-color="#2c1a11"/>
+  </linearGradient>
+
+  <linearGradient id="woodSide" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#a97848"/>
+    <stop offset=".45" stop-color="#684328"/>
+    <stop offset="1" stop-color="#29170f"/>
+  </linearGradient>
+
+  <linearGradient id="woodTop" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#c0925c"/>
+    <stop offset=".45" stop-color="#95623a"/>
+    <stop offset="1" stop-color="#654025"/>
+  </linearGradient>
+
+  <linearGradient id="faceWood" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#8b603b"/>
+    <stop offset=".45" stop-color="#624027"/>
+    <stop offset="1" stop-color="#3c2417"/>
+  </linearGradient>
+
+  <linearGradient id="goldMetal" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fff0bd"/>
+    <stop offset=".22" stop-color="#e6c17f"/>
+    <stop offset=".48" stop-color="#98703e"/>
+    <stop offset=".7" stop-color="#e3bd78"/>
+    <stop offset="1" stop-color="#76502b"/>
+  </linearGradient>
+
+  <linearGradient id="screenGlass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff0c4"/>
+    <stop offset=".3" stop-color="#f3d49b"/>
+    <stop offset=".75" stop-color="#d1a66c"/>
+    <stop offset="1" stop-color="#a97845"/>
+  </linearGradient>
+
+  <linearGradient id="speakerCloth" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f0e1c5"/>
+    <stop offset=".5" stop-color="#d9c5a2"/>
+    <stop offset="1" stop-color="#a88d68"/>
+  </linearGradient>
+
+  <radialGradient id="radioGlow">
+    <stop offset="0" stop-color="#ffdb91" stop-opacity=".75"/>
+    <stop offset="1" stop-color="#ffb84d" stop-opacity="0"/>
+  </radialGradient>
+
+  <filter id="radioShadow" x="-40%" y="-40%" width="180%" height="200%">
+    <feGaussianBlur stdDeviation="8"/>
+  </filter>
+
+  <filter id="radioGlowFilter" x="-200%" y="-200%" width="500%" height="500%">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge>
+      <feMergeNode in="blur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+
+  <clipPath id="cYing">
+    <polygon points="317,735 551,751 555,772 550,782 532,830 517,880 504,920 503,946 502,950 470,948 370,943 270,937 203,934 185,925 183,918 190,910 212,887 237,851 270,808"/>
+    <polygon points="202,921 218,922 200,958 190,960"/>
+  </clipPath>
+
+  <clipPath id="cWen">
+    <polygon points="618,747 845,750 855,757 861,782 872,832 887,890 894,918 892,945 887,949 780,948 680,946 597,944 587,942 586,930 597,880 607,813 616,753"/>
+    <polygon points="608,930 622,930 618,973 606,977"/>
+  </clipPath>
+
+</defs>
+
+<!-- 房间背景 -->
+<image href="photos/room-wide.jpg"
+       x="0" y="0" width="2568" height="1606"/>
+
+<g transform="translate(560 260)">
+
+<!-- 影像笔记本 -->
+<a class="nb" href="photos.html"
+   data-fade="#141414"
+   aria-label="影像：收藏时光">
+
+  <g class="hit">
+    <polygon points="317,735 551,751 555,772 550,782 532,830 517,880 504,920 503,946 502,950 470,948 370,943 270,937 203,934 185,925 183,918 190,910 212,887 237,851 270,808"
+      fill="none" pointer-events="all"/>
+    <polygon points="202,921 218,922 200,958 190,960"
+      fill="none" pointer-events="all"/>
+  </g>
+
+  <g class="lift">
+    <g clip-path="url(#cYing)">
+      <image href="photos/room.jpg"
+             x="0" y="0" width="1448" height="1086"/>
+    </g>
+  </g>
+</a>
+
+<!-- 文字笔记本 -->
+<a class="nb" href="writing.html"
+   data-fade="#2a2018"
+   aria-label="文字：记录思考">
+
+  <g class="hit">
+    <polygon points="618,747 845,750 855,757 861,782 872,832 887,890 894,918 892,945 887,949 780,948 680,946 597,944 587,942 586,930 597,880 607,813 616,753"
+      fill="none" pointer-events="all"/>
+    <polygon points="608,930 622,930 618,973 606,977"
+      fill="none" pointer-events="all"/>
+  </g>
+
+  <g class="lift">
+    <g clip-path="url(#cWen)">
+      <image href="photos/room.jpg"
+             x="0" y="0" width="1448" height="1086"/>
+    </g>
+  </g>
+</a>
+
+<!-- =================================
+     复古收音机
+     缩小约8%，保持原来的中心位置
+================================= -->
+
+<g id="radio"
+   transform="translate(85.2 67.1) scale(.92)"
+   role="button"
+   tabindex="0"
+   aria-label="打开 YAN 复古收音机"
+   aria-pressed="false">
+
+<g class="radio-body">
+
+  <!-- 桌面投影 -->
+  <path d="M883 943 Q1040 956 1225 967
+           L1244 980 Q1050 971 897 960 Z"
+        fill="#160b06"
+        opacity=".68"
+        filter="url(#radioShadow)"/>
+
+  <!-- 机身底部 -->
+  <path d="M893 899 L1218 912 L1227 937
+           L902 924 Z"
+        fill="#302016"
+        stroke="#1e110a"
+        stroke-width="3"/>
+
+  <!-- 支撑脚 -->
+  <path d="M914 917 L945 919 L947 949 L916 947 Z"
+        fill="url(#woodSide)"
+        stroke="#2a190f" stroke-width="2"/>
+  <path d="M1175 929 L1204 930 L1207 958 L1177 956 Z"
+        fill="url(#woodSide)"
+        stroke="#2a190f" stroke-width="2"/>
+
+  <path d="M918 944 L946 946 L946 950 L918 949 Z"
+        fill="#1c1009"/>
+  <path d="M1178 953 L1206 955 L1206 960 L1178 958 Z"
+        fill="#1c1009"/>
+
+  <!-- 机身右侧厚度 -->
+  <path d="M1208 765 L1240 780 L1246 926
+           L1218 911 Z"
+        fill="url(#woodSide)"
+        stroke="#29180e"
+        stroke-width="3"/>
+
+  <!-- 顶部木板 -->
+  <path d="M890 751 L1208 765 L1240 780
+           L915 766 Z"
+        fill="url(#woodTop)"
+        stroke="#57351f"
+        stroke-width="2"/>
+
+  <!-- 顶部木纹 -->
+  <path d="M913 756 Q1050 762 1206 772"
+        fill="none"
+        stroke="#f0c58c"
+        stroke-opacity=".4"
+        stroke-width="2"/>
+
+  <path d="M936 760 Q1060 768 1188 775"
+        fill="none"
+        stroke="#56351d"
+        stroke-opacity=".3"
+        stroke-width="1"/>
+
+  <!-- 正面木质外壳 -->
+  <path d="M890 751 L1208 765 L1218 911
+           L899 899 Z"
+        fill="url(#woodMain)"
+        stroke="#bd9464"
+        stroke-width="2.5"/>
+
+  <!-- 外框倒角 -->
+  <path d="M898 759 L1201 773 L1209 904
+           L907 892 Z"
+        fill="none"
+        stroke="#e0b780"
+        stroke-opacity=".38"
+        stroke-width="2"/>
+
+  <!-- 木纹 -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M904 769 Q1010 780 1197 786"
+          stroke="#f1c68e" stroke-opacity=".27" stroke-width="2"/>
+    <path d="M905 779 Q1040 788 1199 797"
+          stroke="#301b0f" stroke-opacity=".2" stroke-width="1.5"/>
+    <path d="M902 880 Q1050 889 1206 897"
+          stroke="#e3b57b" stroke-opacity=".22" stroke-width="2"/>
+    <path d="M908 886 Q1030 893 1199 902"
+          stroke="#2b170d" stroke-opacity=".28" stroke-width="1.5"/>
+    <path d="M1090 768 Q1110 778 1145 779"
+          stroke="#f2c78e" stroke-opacity=".3" stroke-width="1.5"/>
+  </g>
+
+  <!-- 正面内嵌面板 -->
+  <path d="M911 779 L1192 792 L1199 883
+           L917 872 Z"
+        fill="url(#faceWood)"
+        stroke="#c39a69"
+        stroke-width="2"/>
+
+  <!-- 内嵌面板高光 -->
+  <path d="M917 783 L1188 796"
+        stroke="#e4bd87"
+        stroke-opacity=".45"
+        stroke-width="1.5"/>
+
+  <!-- 扬声器外圈 -->
+  <path d="M925 794 L1035 799 L1041 861
+           L930 856 Z"
+        fill="#352318"
+        stroke="url(#goldMetal)"
+        stroke-width="2.5"/>
+
+  <!-- 扬声器内圈 -->
+  <path d="M930 798 L1030 803 L1036 856
+           L934 851 Z"
+        fill="#8e7655"
+        stroke="#3e2918"
+        stroke-width="2"/>
+
+  <!-- 扬声器织物 -->
+  <path d="M935 803 L1025 807 L1031 851
+           L939 847 Z"
+        fill="url(#speakerCloth)"/>
+
+  <!-- 织物编织纹理 -->
+  <g stroke="#947d5c" stroke-width=".9" opacity=".62">
+    <path d="M940 803 L945 849
+             M948 804 L953 849
+             M956 804 L961 850
+             M964 805 L969 850
+             M972 805 L977 850
+             M980 806 L985 850
+             M988 806 L993 851
+             M996 807 L1001 851
+             M1004 807 L1009 851
+             M1012 808 L1017 852
+             M1020 808 L1025 852"/>
+    <path d="M936 811 L1028 815
+             M937 819 L1029 823
+             M938 827 L1030 831
+             M938 835 L1030 839
+             M939 843 L1031 847"/>
+  </g>
+
+  <!-- 扬声器中心装饰 -->
+  <ellipse cx="983" cy="828" rx="28" ry="15"
+           fill="none" stroke="#a48b66"
+           stroke-opacity=".3" stroke-width="1"/>
+
+  <!-- 调频屏幕金属边框 -->
+  <path d="M1051 797 L1178 803 L1182 844
+           L1054 839 Z"
+        fill="#2d1b10"
+        stroke="url(#goldMetal)"
+        stroke-width="2.5"/>
+
+  <!-- 屏幕玻璃 -->
+  <path d="M1058 802 L1172 808 L1176 838
+           L1061 833 Z"
+        fill="url(#screenGlass)"/>
+
+  <!-- 屏幕发光 -->
+  <ellipse class="radio-light"
+           cx="1118" cy="820"
+           rx="85" ry="43"
+           fill="url(#radioGlow)"
+           opacity=".15"/>
+
+  <!-- 玻璃反光 -->
+  <path d="M1063 804 L1168 810 L1155 817
+           L1066 812 Z"
+        fill="#fff5d9"
+        opacity=".35"/>
+
+  <!-- 频率刻度 -->
+  <g stroke="#79532d" stroke-width="1.2" opacity=".85">
+    <path d="M1070 810 L1070 819
+             M1081 811 L1081 817
+             M1092 812 L1092 820
+             M1103 812 L1103 818
+             M1114 813 L1114 821
+             M1125 813 L1125 819
+             M1136 814 L1136 822
+             M1147 814 L1147 820
+             M1158 815 L1158 823"/>
+  </g>
+
+  <!-- 频率数字 -->
+  <g fill="#654322" font-size="8" font-family="serif">
+    <text x="1068" y="829">88</text>
+    <text x="1099" y="831">92</text>
+    <text x="1130" y="832">96</text>
+    <text x="1155" y="834">100</text>
+  </g>
+
+  <!-- 调频指针 -->
+  <path class="radio-meter"
+        d="M1120 806 L1124 806 L1122 824 Z"
+        fill="#8e4826"
+        transform-origin="1122px 815px"/>
+
+  <!-- 屏幕下方铭牌 -->
+  <text x="1117" y="854"
+        text-anchor="middle"
+        font-size="8"
+        letter-spacing="2"
+        fill="#e4c18d">YAN RADIO</text>
+
+  <!-- 左下角品牌 -->
+  <text x="930" y="881"
+        font-size="8"
+        letter-spacing="1.5"
+        fill="#d2b184">STEREO</text>
+
+  <!-- 指示灯 -->
+  <circle class="radio-indicator"
+          cx="1058" cy="864"
+          r="3"
+          fill="#987247"/>
+
+  <!-- 黄铜旋钮底座 -->
+  <circle cx="1101" cy="864" r="14"
+          fill="#332014"
+          stroke="#d8b27b"
+          stroke-width="2"/>
+
+  <circle cx="1101" cy="864" r="10.5"
+          fill="url(#goldMetal)"
+          stroke="#76502b"
+          stroke-width="1"/>
+
+  <circle cx="1101" cy="864" r="7"
+          fill="none"
+          stroke="#f8dfac"
+          stroke-opacity=".65"
+          stroke-width=".8"/>
+
+  <path d="M1101 857 L1101 863"
+        stroke="#654321"
+        stroke-width="2.2"
+        stroke-linecap="round"/>
+
+  <!-- 第二个旋钮 -->
+  <circle cx="1155" cy="866" r="14"
+          fill="#332014"
+          stroke="#d8b27b"
+          stroke-width="2"/>
+
+  <circle cx="1155" cy="866" r="10.5"
+          fill="url(#goldMetal)"
+          stroke="#76502b"
+          stroke-width="1"/>
+
+  <circle cx="1155" cy="866" r="7"
+          fill="none"
+          stroke="#f8dfac"
+          stroke-opacity=".65"
+          stroke-width=".8"/>
+
+  <path d="M1155 859 L1155 865"
+        stroke="#654321"
+        stroke-width="2.2"
+        stroke-linecap="round"/>
+
+  <!-- 旋钮文字 -->
+  <g font-size="7" fill="#e0bd8c" text-anchor="middle">
+    <text x="1101" y="886">VOL</text>
+    <text x="1155" y="888">TUNE</text>
+  </g>
+
+  <!-- 底部装饰线 -->
+  <path d="M908 896 L1207 908"
+        stroke="#e3b77f"
+        stroke-opacity=".45"
+        stroke-width="1.5"/>
+
+</g>
+
+<!-- 点击区域 -->
+<path d="M890 751 L1208 765 L1240 927 L914 914 Z"
+      fill="transparent"
+      stroke="transparent"
+      stroke-width="10"/>
+
+</g>
+
+<!-- 关灯暗色罩 -->
+<rect class="dim"
+      x="-560" y="-260"
+      width="2568" height="1606"
+      fill="url(#dimG)"/>
+
+<ellipse class="dim-lamp"
+         cx="1014" cy="38"
+         rx="140" ry="70"
+         fill="url(#lampDim)"/>
+
+<ellipse class="dim-lamp"
+         cx="1023" cy="300"
+         rx="70" ry="75"
+         fill="url(#lampDim)"/>
+
+<!-- 吊灯 -->
+<g id="lamp"
+   class="hint"
+   role="button"
+   tabindex="0"
+   aria-label="开关灯"
+   aria-pressed="true">
+
+  <ellipse cx="1014" cy="40"
+           rx="122" ry="46"
+           fill="transparent"
+           pointer-events="all"/>
+
+  <rect x="1000" y="80"
+        width="30" height="170"
+        fill="transparent"
+        pointer-events="all"/>
+
+  <circle cx="1023" cy="298"
+          r="44"
+          fill="transparent"
+          pointer-events="all"/>
+
+  <circle class="ring"
+          cx="1023" cy="302"
+          r="40"/>
+
+  <text id="lampTip"
+        class="lamp-tip"
+        x="1023" y="362"
+        text-anchor="middle">关灯</text>
+</g>
+
+</g>
+</svg>
+</div>
+
+<div id="fade"></div>
+
+<div id="hint">
+点吊灯开关灯 · 点笔记本翻开 · 点收音机听音乐
+</div>
+
+<script>
+(function () {
+
+  var room = document.getElementById('room');
+  var stage = document.getElementById('stage');
+  var fade = document.getElementById('fade');
+  var lamp = document.getElementById('lamp');
+  var lampTip = document.getElementById('lampTip');
+  var hintEl = document.getElementById('hint');
+
+  var reduce = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
+  /* 提示文字 */
+
+  function hideHint() {
+    clearTimeout(hintTimer);
+    hintEl.classList.add('gone');
+  }
+
+  var hintTimer = setTimeout(hideHint,7000);
+  window.addEventListener('click',hideHint);
+
+  /* 固定取景 */
+
+  function panMode() {
+    return window.matchMedia(
+      '(hover: hover) and (pointer: fine)'
+    ).matches && window.innerWidth / window.innerHeight >= 1.2;
+  }
+
+  function fit() {
+
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var a = vw / vh;
+
+    var vb;
+    var par = 'xMidYMid slice';
+
+    if (panMode()) {
+
+      var w = 1448 + 2 * 90;
+      var h = w / a;
+
+      if (h > 1606) {
+        h = 1606;
+        w = h * a;
+      }
+
+      var x = 560 + 724 - w / 2;
+      var fixedY = 260 + (1086 - h) * .5;
+
+      vb = x + ' ' + fixedY + ' ' + w + ' ' + h;
+
+    } else {
+
+      if (a < 1) {
+        vb = '650 0 1270 1606';
+        par = 'xMidYMid meet';
+
+      } else if (a < 1.33) {
+        vb = '560 260 1448 1086';
+        par = 'xMidYMid meet';
+
+      } else if (a > 2.4) {
+        vb = '0 260 2568 1086';
+        par = 'xMidYMid meet';
+
+      } else {
+        vb = '0 260 2568 1086';
+      }
+    }
+
+    room.setAttribute('viewBox',vb);
+    room.setAttribute('preserveAspectRatio',par);
+  }
+
+  window.addEventListener('resize',fit);
+  fit();
+
+  /* 开关灯 */
+
+  function toggleLamp() {
+
+    var off = document.body.classList.toggle('off');
+
+    lamp.setAttribute('aria-pressed',off ? 'false' : 'true');
+    lampTip.textContent = off ? '开灯' : '关灯';
+    lamp.classList.remove('hint');
+  }
+
+  lamp.addEventListener('click',toggleLamp);
+
+  lamp.addEventListener('keydown',function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleLamp();
+    }
+  });
+
+  /* 笔记本页面转场 */
+
+  document.querySelectorAll('a.nb').forEach(function(a) {
+
+    a.addEventListener('click',function(e) {
+
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+        return;
+      }
+
+      e.preventDefault();
+
+      var href = a.getAttribute('href');
+
+      /* 减少动态效果时直接切换 */
+
+      if (reduce) {
+        window.parent.postMessage({
+          type: 'navigate',
+          page: href
+        }, '*');
+
+        return;
+      }
+
+      var r = a.querySelector('.hit').getBoundingClientRect();
+
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+
+      var s = Math.min(
+        vw * .9 / r.width,
+        vh * .9 / r.height,
+        5
+      );
+
+      stage.style.transformOrigin = cx + 'px ' + cy + 'px';
+
+      stage.style.transform =
+        'translate(' +
+        (vw / 2 - cx) + 'px,' +
+        (vh / 2 - cy) + 'px) scale(' + s + ')';
+
+      fade.style.background = a.getAttribute('data-fade') || '#000';
+      fade.classList.add('show');
+
+      setTimeout(function() {
+
+        window.parent.postMessage({
+          type: 'navigate',
+          page: href
+        }, '*');
+
+      },1000);
+
+    });
+  });
+
+  /* 收音机：通知外层播放器打开 */
+
+  var radio = document.getElementById('radio');
+
+  function openPlayer() {
+
+    window.parent.postMessage({
+      type: 'open-player'
+    }, '*');
+
+  }
+
+  radio.addEventListener('click',openPlayer);
+
+  radio.addEventListener('keydown',function(e) {
+
+    if (e.key === 'Enter' || e.key === ' ') {
+
+      e.preventDefault();
+      openPlayer();
+
+    }
+
+  });
+
+  /* 返回主页时重置场景 */
+
+  window.addEventListener('pageshow',function() {
+
+    stage.style.transform = '';
+    fade.classList.remove('show');
+
+    document.body.classList.remove('off');
+
+    lamp.setAttribute('aria-pressed','true');
+    lampTip.textContent = '关灯';
+    lamp.classList.add('hint');
+
+    fit();
+
+  });
+
+})();
+</script>
+
+</body>
+</html>

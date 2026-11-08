@@ -13,7 +13,24 @@ body { display: flex; flex-direction: column; background-image: url('photos/bg.j
 
 #back-btn { font-size: 0.8rem; color: #e0dcd4; text-decoration: none; white-space: nowrap; }
 #back-btn:hover { color: #c9773f; }
+#home-door {
+  margin-left: auto;
+  color: #e0dcd4;
+  text-decoration: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color .2s, background .2s;
+}
 
+#home-door:hover {
+  color: #c9773f;
+  background: rgba(201,119,63,0.15);
+}#home-door span {
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
 #nav { display: flex; flex-direction: column; gap: 8px; }
 #nav button { background: none; border: none; color: #ccc; text-align: left; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.95rem; white-space: nowrap; }
 #nav button:hover { background: rgba(201,119,63,0.2); color: #c9773f; }

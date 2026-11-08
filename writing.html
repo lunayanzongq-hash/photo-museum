@@ -1,63 +1,309 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>YAN——理解世界</title>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { 
-      display: flex; flex-direction: column; 
-      background-image: url('photos/bg.jpg'); 
-      background-size: cover; background-position: center; background-attachment: fixed; 
-      color: #222; font-family: sans-serif; min-height: 100vh; 
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-image: url('photos/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #222;
+      font-family: sans-serif;
+      min-height: 100vh;
       transition: background 0.6s ease;
     }
-   #art-body p {
-  text-indent: 2em;
-  margin: 0 0 1.4em;
-}
+
+    #art-body p {
+      text-indent: 2em;
+      margin: 0 0 1.4em;
+    }
+
     #art-body p.qa-line {
       margin-top: 1.2em;
     }
+
     body.reading {
       background-image: none;
       background-color: #f5ecd4;
     }
 
-    .font-btns { display: none; gap: 6px; margin-left: auto; }
-    body.reading .font-btns { display: flex; }
+    .font-btns {
+      display: none;
+      gap: 6px;
+      margin-left: 8px;
+    }
 
-    #top-bar { position: sticky; top: 0; z-index: 150; display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: rgba(20,20,20,0.7); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.6s ease; }
-    body.reading #top-bar { background: rgba(160,140,90,0.5); }
-    #toggle-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #e0dcd4; flex-shrink: 0; }
-    #toggle-btn:hover { color: #c9773f; }
-    #brand-name { font-size: 0.95rem; color: #e0dcd4; letter-spacing: 0.08em; white-space: nowrap; }
-    .font-btn { background: none; border: 1px solid rgba(255,255,255,0.2); color: #e0dcd4; cursor: pointer; border-radius: 4px; width: 28px; height: 24px; font-size: 0.75rem; line-height: 1; }
-    .font-btn:hover { background: rgba(201,119,63,0.2); color: #c9773f; }
+    body.reading .font-btns {
+      display: flex;
+    }
 
-    #main-wrap { display: flex; flex: 1; }
+    #top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: rgba(20,20,20,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.6s ease;
+    }
 
-    #sidebar { width: 0; min-width: 0; background: rgba(20,20,20,0.7); padding: 0; display: flex; flex-direction: column; align-items: stretch; gap: 12px; position: sticky; top: 53px; height: calc(100vh - 53px); overflow: hidden; transition: width .3s ease, padding .3s ease, background 0.6s ease; border-right: 1px solid rgba(255,255,255,0.08); }
-    #sidebar.open { width: 220px; min-width: 220px; padding: 20px 16px; overflow-y: auto; }
-    body.reading #sidebar { background: rgba(160,140,90,0.5); }
+    body.reading #top-bar {
+      background: rgba(160,140,90,0.5);
+    }
 
-    #back-btn { font-size: 0.8rem; color: #e0dcd4; text-decoration: none; }
-    #back-btn:hover { color: #c9773f; }
+    #toggle-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #e0dcd4;
+      flex-shrink: 0;
+    }
 
-    #article-nav { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
-    .nav-item { font-size: 0.85rem; color: #ccc; cursor: pointer; padding: 6px 8px; border-radius: 4px; line-height: 1.4; white-space: nowrap; }
-    .nav-item:hover { background: rgba(201,119,63,0.2); color: #c9773f; }
-    .nav-item.active { background: rgba(201,119,63,0.25); color: #c9773f; }
+    #toggle-btn:hover {
+      color: #c9773f;
+    }
 
-    #content { 
-      flex: 1; 
-      padding: 48px; 
-      margin: 24px auto; 
-      border-radius: 12px; 
-      max-width: 760px; 
+    #brand-name {
+      font-size: 0.95rem;
+      color: #e0dcd4;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* 顶部音乐按钮 */
+    #music-btn {
+      margin-left: auto;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 6px;
+      background: none;
+      color: #e0dcd4;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color .2s, background .2s;
+    }
+
+    #music-btn:hover {
+      color: #c9773f;
+      background: rgba(201,119,63,0.15);
+    }
+
+    /* 选择房间按钮 */
+    #room-select-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    #room-select-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 6px;
+      background: none;
+      color: #e0dcd4;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color .2s, background .2s;
+    }
+
+    #room-select-btn:hover,
+    #room-select-btn.active {
+      color: #c9773f;
+      background: rgba(201,119,63,0.15);
+    }
+
+    #room-select-btn .door-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    #room-select-btn .arrow {
+      font-size: 0.7rem;
+      transition: transform .2s;
+    }
+
+    #room-select-btn.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    #room-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 150px;
+      padding: 6px;
+      border: 1px solid rgba(207,165,111,.35);
+      border-radius: 9px;
+      background: rgba(39,29,22,.96);
+      box-shadow: 0 8px 25px rgba(0,0,0,.35);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity .2s, transform .2s, visibility .2s;
+      z-index: 300;
+    }
+
+    #room-menu.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .room-option {
+      display: flex;
+      align-items: center;
+      gap: 9px;
       width: 100%;
-      background: linear-gradient(180deg, rgba(255,253,248,0.95) 0%, rgba(255,253,248,0.85) 100%);
+      padding: 10px 11px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #e0dcd4;
+      font-family: inherit;
+      font-size: 0.85rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .room-option:hover {
+      color: #e8bd88;
+      background: rgba(201,119,63,0.18);
+    }
+
+    .font-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #e0dcd4;
+      cursor: pointer;
+      border-radius: 4px;
+      width: 28px;
+      height: 24px;
+      font-size: 0.75rem;
+      line-height: 1;
+    }
+
+    .font-btn:hover {
+      background: rgba(201,119,63,0.2);
+      color: #c9773f;
+    }
+
+    #main-wrap {
+      display: flex;
+      flex: 1;
+    }
+
+    #sidebar {
+      width: 0;
+      min-width: 0;
+      background: rgba(20,20,20,0.7);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      position: sticky;
+      top: 53px;
+      height: calc(100vh - 53px);
+      overflow: hidden;
+      transition: width .3s ease, padding .3s ease, background 0.6s ease;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    #sidebar.open {
+      width: 220px;
+      min-width: 220px;
+      padding: 20px 16px;
+      overflow-y: auto;
+    }
+
+    body.reading #sidebar {
+      background: rgba(160,140,90,0.5);
+    }
+
+    #back-btn {
+      font-size: 0.8rem;
+      color: #e0dcd4;
+      text-decoration: none;
+    }
+
+    #back-btn:hover {
+      color: #c9773f;
+    }
+
+    #article-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .nav-item {
+  font-size: 0.85rem;
+  color: #4a4030;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: rgba(201,119,63,0.18);
+  color: #8a4825;
+}
+
+.nav-item.active {
+  background: rgba(201,119,63,0.22);
+  color: #793d20;
+  font-weight: 600;
+}
+
+/* 阅读模式：侧边栏目录使用深色文字 */
+body.reading .nav-item {
+  color: #4a4030;
+}
+
+body.reading .nav-item:hover {
+  color: #8a4825;
+}
+
+body.reading .nav-item.active {
+  color: #793d20;
+}
+    #content {
+      flex: 1;
+      padding: 48px;
+      margin: 24px auto;
+      border-radius: 12px;
+      max-width: 760px;
+      width: 100%;
+      background: linear-gradient(
+        180deg,
+        rgba(255,253,248,0.95) 0%,
+        rgba(255,253,248,0.85) 100%
+      );
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 8px 32px rgba(0,0,0,0.15);
@@ -65,17 +311,17 @@
       position: relative;
       transition: background 0.6s ease;
     }
-       body.reading #content {
+
+    body.reading #content {
       background: rgba(250,240,210,0.4);
       box-shadow: none;
       border: none;
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
-
-      /* 阅读模式：纸张式，比列表页稍宽 */
       max-width: 860px;
       padding: 48px 56px;
     }
+
     #list {
       display: flex;
       flex-direction: column;
@@ -83,6 +329,7 @@
       position: relative;
       padding-left: 32px;
     }
+
     #list::before {
       content: "";
       position: absolute;
@@ -92,13 +339,18 @@
       width: 2px;
       background: rgba(160,140,90,0.3);
     }
+
     .item {
       position: relative;
       border-bottom: none;
       padding-bottom: 32px;
       cursor: pointer;
     }
-    .item:last-child { padding-bottom: 0; }
+
+    .item:last-child {
+      padding-bottom: 0;
+    }
+
     .item::before {
       content: "";
       position: absolute;
@@ -112,62 +364,234 @@
       box-shadow: 0 0 0 2px rgba(160,140,90,0.25);
       z-index: 1;
     }
-    .item:hover h2 { color: #000; }
-    .item:hover::before { background: #a85c2c; }
-    .item .date { color: #aaa; margin-bottom: 6px; font-size: 0.85rem; }
-    .item h2 { margin-bottom: 8px; color: #333; transition: color .2s; }
-    .item .summary { color: #888; line-height: 1.7; }
-    #article { display: none; }
-    #article .back-btn { color: #8a7a52; cursor: pointer; margin-bottom: 32px; display: inline-block; }
-    #article .back-btn:hover { color: #6a5c3d; }
-    #article-header { text-align: center; margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid rgba(160,140,90,0.3); }
-    #article h2 { font-size: 1.6rem; color: #3d3728; font-weight: 600; margin-bottom: 12px; }
-    #article .date { color: #a89c7d; }
-    #article .body { color: #4a4438; line-height: 2.1; }
 
-    #back-top { position: fixed; bottom: 36px; right: 36px; width: 42px; height: 42px; background: rgba(20,20,20,0.7); border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; color: #e0dcd4; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: background .2s, color .2s; z-index: 99; }
-    #back-top:hover { background: rgba(201,119,63,0.3); color: #c9773f; }
-    #back-top.visible { display: flex; }
+    .item:hover h2 {
+      color: #000;
+    }
+
+    .item:hover::before {
+      background: #a85c2c;
+    }
+
+    .item .date {
+      color: #aaa;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    .item h2 {
+      margin-bottom: 8px;
+      color: #333;
+      transition: color .2s;
+    }
+
+    .item .summary {
+      color: #888;
+      line-height: 1.7;
+    }
+
+    #article {
+      display: none;
+    }
+
+    #article .back-btn {
+      color: #8a7a52;
+      cursor: pointer;
+      margin-bottom: 32px;
+      display: inline-block;
+    }
+
+    #article .back-btn:hover {
+      color: #6a5c3d;
+    }
+
+    #article-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(160,140,90,0.3);
+    }
+
+    #article h2 {
+      font-size: 1.6rem;
+      color: #3d3728;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    #article .date {
+      color: #a89c7d;
+    }
+
+    #article .body {
+      color: #4a4438;
+      line-height: 2.1;
+    }
+
+    #back-top {
+      position: fixed;
+      bottom: 36px;
+      right: 36px;
+      width: 42px;
+      height: 42px;
+      background: rgba(20,20,20,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: #e0dcd4;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: background .2s, color .2s;
+      z-index: 99;
+    }
+
+    #back-top:hover {
+      background: rgba(201,119,63,0.3);
+      color: #c9773f;
+    }
+
+    #back-top.visible {
+      display: flex;
+    }
 
     @media (max-width: 768px) {
-      #sidebar { position: fixed; top: 53px; left: 0; height: calc(100vh - 53px); z-index: 140; }
-      #sidebar.open { width: 60%; min-width: unset; }
-           #content { padding: 20px; margin: 10px auto; }
-      body.reading #content { padding: 24px 18px; }
-      #back-top { bottom: 20px; right: 20px; }
-      #main-wrap { position: relative; }
+
+      #sidebar {
+        position: fixed;
+        top: 53px;
+        left: 0;
+        height: calc(100vh - 53px);
+        z-index: 140;
+      }
+
+      #sidebar.open {
+        width: 60%;
+        min-width: unset;
+      }
+
+      #content {
+        padding: 20px;
+        margin: 10px auto;
+      }
+
+      body.reading #content {
+        padding: 24px 18px;
+      }
+
+      #back-top {
+        bottom: 20px;
+        right: 20px;
+      }
+
+      #main-wrap {
+        position: relative;
+      }
+
     }
   </style>
 </head>
+
 <body>
+
+  <!-- 顶部导航 -->
   <div id="top-bar">
+
     <button id="toggle-btn" onclick="toggleSidebar(event)">☰</button>
+
     <span id="brand-name">YAN——理解世界</span>
+
+    <!-- 音乐播放器入口 -->
+    <button
+      id="music-btn"
+      type="button"
+      title="打开音乐播放器"
+      aria-label="打开音乐播放器"
+    >♫</button>
+
+    <!-- 选择房间 -->
+    <div id="room-select-wrap">
+
+      <button
+        id="room-select-btn"
+        type="button"
+        aria-label="房间"
+        aria-expanded="false"
+      >
+  
+        <span>房间</span>
+        <span class="arrow">▾</span>
+      </button>
+
+      <div id="room-menu">
+
+        <button class="room-option" type="button" data-page="home.html">
+   
+          <span>卧室</span>
+        </button>
+
+        <button class="room-option" type="button" data-page="photos.html">
+  
+          <span>照片馆</span>
+        </button>
+
+      </div>
+
+    </div>
+
     <div class="font-btns">
       <button class="font-btn" onclick="changeFontSize(1)">A+</button>
       <button class="font-btn" onclick="changeFontSize(-1)">A-</button>
     </div>
+
   </div>
+
+  <!-- 主体 -->
   <div id="main-wrap">
+
     <aside id="sidebar">
-      <a id="back-btn" href="index.html">← 返回主页</a>
+
       <nav id="article-nav"></nav>
+
     </aside>
+
     <main id="content">
+
       <div id="list"></div>
+
       <div id="article">
+
         <span class="back-btn" onclick="showList()">← 返回列表</span>
+
         <div id="article-header">
+
           <h2 id="art-title"></h2>
+
           <div class="date" id="art-date"></div>
+
         </div>
+
         <div class="body" id="art-body"></div>
+
       </div>
+
     </main>
+
   </div>
+
+  <!-- 回到顶部 -->
   <div id="back-top" onclick="scrollToTop()">↑</div>
+
+  <!-- 文章数据 -->
   <script src="articles.js"></script>
+
   <script>
+    /* =================================
+       页面元素
+    ================================= */
+
     const list = document.getElementById("list");
     const articleView = document.getElementById("article");
     const articleNav = document.getElementById("article-nav");
@@ -175,81 +599,264 @@
     const artBody = document.getElementById("art-body");
     const content = document.getElementById("content");
     const backTop = document.getElementById("back-top");
-    const brandName = document.getElementById("brand-name");
+
+    const roomSelectBtn = document.getElementById("room-select-btn");
+    const roomMenu = document.getElementById("room-menu");
+
     let fontSize = 18;
+
     content.style.fontSize = fontSize + "px";
 
-  function formatText(str) {
-  let escaped = str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
-    .replace(/\[\[([0-9A-Fa-f]{6}):(.+?)\]\]/g, '<span style="color:#$1">$2</span>');
 
-  const lines = escaped.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+    /* =================================
+       打开外层音乐播放器
+    ================================= */
 
-  return lines.map(line => {
-    const isQuestion = /^Yan[：:]/.test(line);
-    return `<p class="${isQuestion ? 'qa-line' : ''}">${line}</p>`;
-  }).join("");
-}
+    document.getElementById("music-btn").addEventListener("click", () => {
+
+      window.parent.postMessage({
+        type: "open-player"
+      }, "*");
+
+    });
+
+
+    /* =================================
+       选择房间菜单
+    ================================= */
+
+    roomSelectBtn.addEventListener("click", (event) => {
+
+      event.stopPropagation();
+
+      const isOpen = roomMenu.classList.toggle("open");
+
+      roomSelectBtn.classList.toggle("active", isOpen);
+
+      roomSelectBtn.setAttribute("aria-expanded", String(isOpen));
+
+    });
+
+    document.querySelectorAll(".room-option").forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        const page = button.dataset.page;
+
+        if (page === "home.html" || page === "photos.html") {
+
+          window.parent.postMessage({
+            type: "navigate",
+            page: page
+          }, "*");
+
+        }
+
+        roomMenu.classList.remove("open");
+
+        roomSelectBtn.classList.remove("active");
+
+        roomSelectBtn.setAttribute("aria-expanded", "false");
+
+      });
+
+    });
+
+    document.addEventListener("click", (event) => {
+
+      if (!event.target.closest("#room-select-wrap")) {
+
+        roomMenu.classList.remove("open");
+
+        roomSelectBtn.classList.remove("active");
+
+        roomSelectBtn.setAttribute("aria-expanded", "false");
+
+      }
+
+    });
+
+
+    /* =================================
+       文本格式化
+    ================================= */
+
+    function formatText(str) {
+
+      let escaped = str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+        .replace(
+          /\[\[([0-9A-Fa-f]{6}):(.+?)\]\]/g,
+          '<span style="color:#$1">$2</span>'
+        );
+
+      const lines = escaped
+        .split("\n")
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
+
+      return lines.map(line => {
+
+        const isQuestion = /^Yan[：:]/.test(line);
+
+        return `<p class="${isQuestion ? 'qa-line' : ''}">${line}</p>`;
+
+      }).join("");
+
+    }
+
+
+    /* =================================
+       滚动与回到顶部
+    ================================= */
+
     window.addEventListener("scroll", () => {
+
       backTop.classList.toggle("visible", window.scrollY > 300);
+
     });
 
     function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
     }
 
+
+    /* =================================
+       侧边栏
+    ================================= */
+
     function toggleSidebar(e) {
+
       if (e) e.stopPropagation();
+
       sidebar.classList.toggle("open");
+
     }
 
     document.addEventListener("click", (e) => {
-      if (sidebar.classList.contains("open") && !sidebar.contains(e.target)) {
+
+      if (
+        sidebar.classList.contains("open") &&
+        !sidebar.contains(e.target) &&
+        !e.target.closest("#toggle-btn")
+      ) {
+
         sidebar.classList.remove("open");
+
       }
+
     });
+
+
+    /* =================================
+       字体大小
+    ================================= */
 
     function changeFontSize(delta) {
+
       fontSize = Math.min(Math.max(fontSize + delta, 12), 24);
+
       content.style.fontSize = fontSize + "px";
+
     }
+
+
+    /* =================================
+       返回文章列表
+    ================================= */
 
     function showList() {
+
       list.style.display = "flex";
+
       articleView.style.display = "none";
+
       document.body.classList.remove("reading");
-      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+
+      document.querySelectorAll(".nav-item").forEach(b => {
+
+        b.classList.remove("active");
+
+      });
+
     }
+
+
+    /* =================================
+       打开文章
+    ================================= */
 
     function showArticle(i) {
+
       list.style.display = "none";
+
       articleView.style.display = "block";
+
       document.body.classList.add("reading");
+
       document.getElementById("art-title").textContent = articles[i].title;
+
       document.getElementById("art-date").textContent = articles[i].date;
+
       artBody.innerHTML = formatText(articles[i].content);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      document.querySelectorAll(".nav-item").forEach(b => {
+
+        b.classList.remove("active");
+
+      });
+
       articleNav.children[i].classList.add("active");
+
     }
 
+
+    /* =================================
+       生成文章列表与侧边导航
+    ================================= */
+
     articles.forEach((a, i) => {
+
       const div = document.createElement("div");
+
       div.className = "item";
-      div.innerHTML = "<div class='date'>" + a.date + "</div><h2>" + a.title + "</h2><div class='summary'>" + a.summary + "</div>";
+
+      div.innerHTML =
+        "<div class='date'>" + a.date + "</div>" +
+        "<h2>" + a.title + "</h2>" +
+        "<div class='summary'>" + a.summary + "</div>";
+
       div.onclick = () => showArticle(i);
+
       list.appendChild(div);
 
+
       const btn = document.createElement("div");
+
       btn.className = "nav-item";
+
       btn.textContent = a.title;
+
       btn.onclick = () => showArticle(i);
+
       articleNav.appendChild(btn);
+
     });
+
   </script>
+
 </body>
 </html>
