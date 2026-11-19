@@ -1,15 +1,16 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>YAN——看见世界</title>
 
-<link rel="stylesheet" href="style.css?v=10" />
+<link rel="stylesheet" href="style.css?v=11" />
 
 <style>
-/* 右上角操作区 */
+/* ================================
+   顶部操作区：音乐与房间菜单
+================================ */
 
 .top-actions {
   margin-left: auto;
@@ -27,17 +28,13 @@
   gap: 5px;
   min-height: 34px;
   padding: 5px 10px;
-
   border: 1px solid rgba(226,197,158,.25);
   border-radius: 6px;
-
   background: rgba(255,255,255,.04);
   color: #e8d8c1;
-
   font-family: inherit;
   font-size: .85rem;
   cursor: pointer;
-
   transition: all .2s;
 }
 
@@ -55,7 +52,6 @@
 }
 
 /* 房间菜单 */
-
 .room-switcher {
   position: relative;
 }
@@ -65,23 +61,17 @@
   top: calc(100% + 9px);
   right: 0;
   z-index: 300;
-
   min-width: 155px;
   padding: 6px;
-
   border: 1px solid rgba(207,165,111,.4);
   border-radius: 9px;
-
   background: rgba(39,27,19,.97);
-
   box-shadow: 0 10px 28px rgba(0,0,0,.35);
-
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-
   transform: translateY(-5px);
-  transition: opacity .2s,transform .2s,visibility .2s;
+  transition: opacity .2s, transform .2s, visibility .2s;
 }
 
 .room-menu.open {
@@ -95,22 +85,17 @@
   display: flex;
   align-items: center;
   gap: 9px;
-
   width: 100%;
   padding: 11px 12px;
-
   border: 0;
   border-radius: 5px;
-
   background: transparent;
   color: #e8d8c1;
-
   font-family: inherit;
   font-size: .85rem;
   text-align: left;
-
   cursor: pointer;
-  transition: background .2s,color .2s;
+  transition: background .2s, color .2s;
 }
 
 .room-menu button:hover {
@@ -118,6 +103,141 @@
   color: #e6b17e;
 }
 
+/* ================================
+   随机摄影开场
+================================ */
+
+#photo-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .5s ease, visibility .5s ease;
+}
+
+#photo-intro.leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#intro-enter {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#intro-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform .7s ease;
+}
+
+#intro-enter:hover #intro-image {
+  transform: scale(1.015);
+}
+
+.intro-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 55px 20px 32px;
+  color: rgba(255,255,255,.9);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0,0,0,.58)
+  );
+  pointer-events: none;
+}
+
+#intro-caption-text {
+  font-size: .9rem;
+  letter-spacing: .06em;
+  text-align: center;
+}
+
+.intro-hint {
+  font-size: .72rem;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.65);
+}
+
+/* ================================
+   开场图：当天日期（新增）
+   位置和大小由脚本按图片实际显示区域设置
+================================ */
+
+.intro-date {
+  position: absolute;
+  --u: 400px;               /* 由脚本更新：字号基准 */
+  color: rgba(255,255,255,.92);
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0;               /* 脚本定位完成后再淡入，避免跳动 */
+  transition: opacity .6s ease;
+  text-shadow: 0 1px 10px rgba(0,0,0,.4);
+  /* 只在图片顶部加一层很淡的渐变，保证白字清晰 */
+  background: linear-gradient(to bottom, rgba(0,0,0,.3), transparent 30%);
+}
+
+.intro-date.ready {
+  opacity: 1;
+}
+
+.intro-date-left {
+  position: absolute;
+  left: calc(var(--u) * 0.07);
+  top: calc(var(--u) * 0.075);
+}
+
+.intro-date-ym {
+  display: block;
+  font-size: calc(var(--u) * 0.052);
+  font-weight: 300;
+  letter-spacing: .02em;
+}
+
+.intro-date-day {
+  display: block;
+  margin-top: calc(var(--u) * 0.015);
+  font-family: "Noto Serif SC", "Songti SC", Georgia, "Times New Roman", serif;
+  font-size: calc(var(--u) * 0.19);
+  font-weight: 400;
+  letter-spacing: -.02em;
+}
+
+.intro-date-week {
+  position: absolute;
+  right: calc(var(--u) * 0.07);
+  top: calc(var(--u) * 0.12);
+  font-size: calc(var(--u) * 0.038);
+  font-weight: 300;
+  letter-spacing: .08em;
+  opacity: .92;
+}
+
+/* 手机端顶部操作区 */
 @media(max-width:600px) {
   .top-actions {
     gap: 5px;
@@ -133,6 +253,14 @@
   .music-page-btn {
     min-width: 32px;
     font-size: 1.1rem;
+  }
+
+  .intro-caption {
+    padding-bottom: 26px;
+  }
+
+  #intro-caption-text {
+    font-size: .82rem;
   }
 }
 
@@ -150,22 +278,39 @@
 
 <body>
 
-<!-- 顶部导航 -->
-
-<div id="top-bar">
-
+<!-- 随机摄影开场 -->
+<div id="photo-intro">
   <button
-    id="toggle-btn"
-    onclick="toggleSidebar(event)"
-    aria-label="打开或关闭分类菜单"
-  >☰</button>
+    id="intro-enter"
+    type="button"
+    aria-label="点击进入照片馆"
+  >
+    <img id="intro-image" src="" alt="" />
+
+    <!-- 新增：当天日期 -->
+    <div class="intro-date" id="intro-date">
+      <div class="intro-date-left">
+        <span class="intro-date-ym" id="intro-date-ym"></span>
+        <span class="intro-date-day" id="intro-date-day"></span>
+      </div>
+      <span class="intro-date-week" id="intro-date-week"></span>
+    </div>
+
+    <div class="intro-caption">
+      <span id="intro-caption-text"></span>
+      <span class="intro-hint">点击照片，进入照片馆</span>
+    </div>
+  </button>
+</div>
+
+<!-- 顶部导航 -->
+<div id="top-bar">
 
   <span id="brand-name">YAN——看见世界</span>
 
   <div class="top-actions">
 
     <!-- 音乐按钮 -->
-
     <button
       id="music-btn"
       class="music-page-btn"
@@ -175,7 +320,6 @@
     >♫</button>
 
     <!-- 选择房间 -->
-
     <div class="room-switcher">
 
       <button
@@ -189,37 +333,29 @@
       </button>
 
       <div id="room-menu" class="room-menu">
-
         <button type="button" data-page="home.html">
           卧室
         </button>
 
         <button type="button" data-page="writing.html">
-           书房
+          书房
         </button>
-
       </div>
 
     </div>
 
   </div>
-
 </div>
 
-<!-- 页面主体 -->
-
-<div id="main-wrap">
-
-  <aside id="sidebar">
-    <nav id="nav"></nav>
-  </aside>
-
-  <main id="gallery"></main>
-
+<!-- 顶部分类导航 -->
+<div id="category-bar">
+  <nav id="nav"></nav>
 </div>
 
-<!-- 图片灯箱 -->
+<!-- 原有照片时间轴 -->
+<main id="gallery"></main>
 
+<!-- 原有图片灯箱 -->
 <div id="lightbox" class="hidden">
 
   <button id="close" aria-label="关闭图片">✕</button>
@@ -232,35 +368,13 @@
 
 </div>
 
+<!-- 加载原有照片数据和照片馆功能 -->
 <script src="script.js?v=9"></script>
 
 <script>
-/* =================================
-   侧边栏
-================================= */
-
-const sidebar = document.getElementById("sidebar");
-
-function toggleSidebar(e) {
-  if (e) e.stopPropagation();
-  sidebar.classList.toggle("open");
-}
-
-document.addEventListener("click", (e) => {
-
-  if (
-    sidebar.classList.contains("open") &&
-    !sidebar.contains(e.target) &&
-    !e.target.closest("#toggle-btn")
-  ) {
-    sidebar.classList.remove("open");
-  }
-
-});
-
-/* =================================
+/* ================================
    音乐播放器入口
-================================= */
+================================ */
 
 document.getElementById("music-btn").addEventListener("click", () => {
 
@@ -270,9 +384,9 @@ document.getElementById("music-btn").addEventListener("click", () => {
 
 });
 
-/* =================================
-   选择房间菜单
-================================= */
+/* ================================
+   房间菜单
+================================ */
 
 const roomMenuBtn = document.getElementById("room-menu-btn");
 const roomMenu = document.getElementById("room-menu");
@@ -291,7 +405,6 @@ roomMenuBtn.addEventListener("click", (e) => {
 });
 
 /* 点击菜单项目切换页面 */
-
 roomMenu.querySelectorAll("button[data-page]").forEach(button => {
 
   button.addEventListener("click", () => {
@@ -312,7 +425,6 @@ roomMenu.querySelectorAll("button[data-page]").forEach(button => {
 });
 
 /* 点击其他区域关闭菜单 */
-
 document.addEventListener("click", (e) => {
 
   if (
@@ -327,6 +439,94 @@ document.addEventListener("click", (e) => {
   }
 
 });
+
+/* ================================
+   随机摄影开场
+================================ */
+
+const intro = document.getElementById("photo-intro");
+const introImage = document.getElementById("intro-image");
+const introCaption = document.getElementById("intro-caption-text");
+const introEnter = document.getElementById("intro-enter");
+
+/* 直接读取 script.js 中原有的 photos 数组 */
+if (typeof photos !== "undefined" && photos.length > 0) {
+
+  const randomIndex = Math.floor(Math.random() * photos.length);
+  const randomPhoto = photos[randomIndex];
+
+  introImage.src = randomPhoto.src;
+  introImage.alt = randomPhoto.caption;
+  introCaption.textContent = randomPhoto.caption;
+
+} else {
+
+  /* 如果照片数据未加载，不阻挡原页面 */
+  intro.remove();
+
+}
+
+/* 点击随机照片，淡出并进入原有照片馆 */
+introEnter.addEventListener("click", () => {
+
+  intro.classList.add("leaving");
+
+  setTimeout(() => {
+    intro.remove();
+  }, 500);
+
+});
+
+/* ================================
+   开场图：当天日期（新增）
+================================ */
+
+(function () {
+
+  const dateBox = document.getElementById("intro-date");
+  if (!dateBox || !document.body.contains(intro)) return;
+
+  /* 1. 填入今天的日期 */
+  const now = new Date();
+  const weekNames = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+
+  document.getElementById("intro-date-ym").textContent =
+    now.getFullYear() + "/" + String(now.getMonth() + 1).padStart(2, "0");
+  document.getElementById("intro-date-day").textContent = now.getDate();
+  document.getElementById("intro-date-week").textContent = weekNames[now.getDay()];
+
+  /* 2. 把日期层对齐到图片「实际显示」的区域（避开 contain 产生的黑边） */
+  function layoutDate() {
+
+    const nw = introImage.naturalWidth;
+    const nh = introImage.naturalHeight;
+    if (!nw || !nh) return;
+
+    const cw = introEnter.clientWidth;
+    const ch = introEnter.clientHeight;
+
+    const scale = Math.min(cw / nw, ch / nh);
+    const w = nw * scale;
+    const h = nh * scale;
+
+    dateBox.style.left = (cw - w) / 2 + "px";
+    dateBox.style.top = (ch - h) / 2 + "px";
+    dateBox.style.width = w + "px";
+    dateBox.style.height = h + "px";
+
+    /* 字号基准：横图时不会因为太宽而显得过大 */
+    dateBox.style.setProperty("--u", Math.min(w, h * 0.62) + "px");
+
+    dateBox.classList.add("ready");
+  }
+
+  if (introImage.complete) {
+    layoutDate();
+  }
+  introImage.addEventListener("load", layoutDate);
+  window.addEventListener("resize", layoutDate);
+
+})();
 
 </script>
 
